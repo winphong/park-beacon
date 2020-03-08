@@ -1,0 +1,24 @@
+{
+  "destination_addresses": [
+    "21 Heng Mui Keng Terrace, Singapore 119613",
+    "3 Research Link, Singapore 117602"
+  ],
+  "origin_addresses": ["6 Medical Dr, Singapore 117595"],
+  "rows": [
+    {
+      "elements": [
+        {
+          "distance": { "text": "2.3 km", "value": 2275 },
+          "duration": { "text": "7 mins", "value": 425 },
+          "status": "OK"
+        },
+        {
+          "distance": { "text": "2.0 km", "value": 2024 },
+          "duration": { "text": "6 mins", "value": 340 },
+          "status": "OK"
+        }
+      ]
+    }
+  ],
+  "status": "OK"
+}
