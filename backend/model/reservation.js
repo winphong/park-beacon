@@ -17,7 +17,8 @@ const reservationSchema = new mongoose.Schema({
   status: {
     type: mongoose.Schema.Types.String,
     required: true,
-    enum: ["RESERVED", "COMPLETED", "CANCELLED", "EXPIRED"]
+    enum: ["RESERVED", "COMPLETED", "CANCELLED", "EXPIRED"],
+    default: "RESERVED"
   },
   calendarEventId: {
     type: mongoose.Schema.Types.String,

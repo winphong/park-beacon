@@ -5,7 +5,7 @@ const cal = google.calendar({
 });
 
 // Set the calendar to query
-const calendar = "winphong1011@gmail.com";
+const calendar = "primary";
 
 // Set beginning of query to 3 pm tomorrow
 const tomorrow3pm = new Date("3 March 2020");

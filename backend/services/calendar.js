@@ -21,21 +21,22 @@ const listEvents = async oAuth2Client => {
         timeMax: tomorrow,
         singleEvents: true,
         showDeleted: false,
-        fields: "items(start/dateTime, summary, location)"
+        q: "nus", // filter only those event in NUS
+        fields: "items(start/dateTime, summary, location, id)"
       })
       .then(response => {
         let events = response.data.items;
         events = events
-          // .filter(e => {
-          //   TODO: Filter out those with no startDate and location;
-          // })
+          .filter(event => {
+            return _.get(event, "start.dateTime") && event.location;
+          })
           .reverse();
 
         resolve(events);
       })
       .catch(err => {
-        console.error(err.response.data.error);
-        reject(err.response.data.error);
+        console.error(err);
+        reject(err);
       });
   });
 };

@@ -14,6 +14,7 @@ const getDistanceList = (origin, destinations) => {
       }
     })
     .then(resp => {
+      // TODO: Sort the array with shortest distance
       console.log(JSON.stringify(resp.data));
     })
     .catch(err => {
