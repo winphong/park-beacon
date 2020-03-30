@@ -10,9 +10,15 @@ def server():
     s.bind((host, port))
 
     s.listen(1)
+    s.settimeout(20)
 
     while True:
-        client_socket, address = s.accept()
+        try:
+            client_socket, address = s.accept()
+        except socket.timeout:
+            print("Timeout")
+            break
+
         print("Connection from: " + str(address))
         data = client_socket.recv(1024).decode('utf-8')
 
