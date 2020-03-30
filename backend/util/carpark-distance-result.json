@@ -1,0 +1,47 @@
+[
+  {
+    "carparkName": "Car Park 15",
+    "lat": 1.293172,
+    "lng": 103.771788,
+    "landmark": "In front of Temasek and Eusoff",
+    "distance": { "text": "0.4 km", "value": 393 },
+    "duration": { "text": "2 mins", "value": 117 },
+    "status": "OK"
+  },
+  {
+    "carparkName": "Car Park 12",
+    "lat": 1.292814,
+    "lng": 103.774795,
+    "landmark": "Hon Sui Sen Memorial Library",
+    "distance": { "text": "0.7 km", "value": 732 },
+    "duration": { "text": "3 mins", "value": 185 },
+    "status": "OK"
+  },
+  {
+    "carparkName": "Car Park 12B",
+    "lat": 1.292054,
+    "lng": 103.77562,
+    "landmark": "i3",
+    "distance": { "text": "0.9 km", "value": 930 },
+    "duration": { "text": "4 mins", "value": 225 },
+    "status": "OK"
+  },
+  {
+    "carparkName": "Car Park 11",
+    "lat": 1.294348,
+    "lng": 103.775201,
+    "landmark": "In front of IMRE and SSLS",
+    "distance": { "text": "1.1 km", "value": 1084 },
+    "duration": { "text": "5 mins", "value": 271 },
+    "status": "OK"
+  },
+  {
+    "carparkName": "Car Park 2A",
+    "lat": 1.300719,
+    "lng": 103.771672,
+    "landmark": "Faculty of Engineering",
+    "distance": { "text": "1.9 km", "value": 1944 },
+    "duration": { "text": "7 mins", "value": 448 },
+    "status": "OK"
+  }
+]

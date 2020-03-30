@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^2.1.2",
+    "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "config": "^3.3.0",
     "cors": "^2.8.5",
@@ -20,6 +21,7 @@
     "googleapis": "^47.0.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
-    "mongoose": "^5.9.3"
+    "mongoose": "^5.9.3",
+    "winston": "^3.2.1"
   }
 }

@@ -4,6 +4,10 @@ const { Reservation } = require("../model/reservation");
 const _ = require("lodash");
 
 // TODO: Add in customer middleware
+router.get("/test", async (req, res) => {
+  console.log("Called");
+  res.send("testing!");
+});
 
 // Get all reservations of logged in customer
 router.get("/", async (req, res) => {

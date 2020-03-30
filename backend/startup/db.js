@@ -9,5 +9,6 @@ module.exports = () => {
       useUnifiedTopology: true,
       useCreateIndex: true
     })
-    .then(() => console.log(`Connected to ${db}...`));
+    .then(() => console.log(`Connected to ${db}...`))
+    .catch(err => console.log(err.response));
 };

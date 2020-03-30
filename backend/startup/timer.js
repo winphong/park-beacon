@@ -2,14 +2,17 @@ const { getAllCustomer } = require("../services/customer");
 const { authorise } = require("../services/oauth");
 const { listEvents } = require("../services/calendar");
 const { makeReservation } = require("../services/reservation");
+const logger = require("../util/logger")(module);
+const axios = require("axios");
 const _ = require("lodash");
 
 module.exports = async () => {
   setInterval(async () => {
     const customers = await retrieveAllCustomer();
     const customer_events = await checkUpcomingEvents(customers);
+    console.log(customer_events);
     await makeReservationForAllUpcomingEvents(customer_events);
-  }, 2000);
+  }, 4000);
 
   /*
   1. Retrieve token of all customers
@@ -35,11 +38,12 @@ checkUpcomingEvents = async customers => {
       // }
     })
   ).then(response => {
+    // a list of {customer, events} object
     return response.filter(e => {
       return e.events.length > 0;
     });
   });
-  // return an object of {customerId, upcomingEvent}
+  // return an object of {customer, upcomingEvent}
 };
 
 makeReservationForAllUpcomingEvents = async customer_events => {

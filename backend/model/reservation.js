@@ -1,13 +1,23 @@
 const mongoose = require("mongoose");
 
 const reservationSchema = new mongoose.Schema({
-  carParkName: {
-    type: mongoose.Schema.Types.String,
-    required: true
-    // enum : ["list of carpark in NUS"]
+  carpark: {
+    carparkName: {
+      type: mongoose.Schema.Types.String,
+      required: true
+      // enum : ["list of carpark in NUS"]
+    },
+    lat: {
+      type: mongoose.Schema.Types.Number,
+      required: true
+    },
+    lng: {
+      type: mongoose.Schema.Types.Number,
+      required: true
+    }
   },
   parkingLotNumber: {
-    type: mongoose.Schema.Types.Number,
+    type: mongoose.Schema.Types.String,
     required: true
   },
   customerId: {
@@ -26,7 +36,8 @@ const reservationSchema = new mongoose.Schema({
   },
   dateTime: {
     type: mongoose.Schema.Types.Date,
-    required: true
+    required: true,
+    default: new Date()
   },
   releaseCode: {
     type: mongoose.Schema.Types.Number,

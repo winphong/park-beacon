@@ -1,20 +1,40 @@
 {
   "destination_addresses": [
+    "7 Engineering Drive 1, Singapore 117574",
     "21 Heng Mui Keng Terrace, Singapore 119613",
-    "3 Research Link, Singapore 117602"
+    "Temasek Hall Block D&E, Singapore",
+    "3 Research Link, Singapore 117602",
+    "1 Hon Sui Sen Dr, Singapore 117588"
   ],
-  "origin_addresses": ["6 Medical Dr, Singapore 117595"],
+  "origin_addresses": [
+    "NUS School of Computing, COM1, 13 Computing Drive, Singapore 117417"
+  ],
   "rows": [
     {
       "elements": [
         {
-          "distance": { "text": "2.3 km", "value": 2275 },
-          "duration": { "text": "7 mins", "value": 425 },
+          "distance": { "text": "1.9 km", "value": 1944 },
+          "duration": { "text": "7 mins", "value": 448 },
           "status": "OK"
         },
         {
-          "distance": { "text": "2.0 km", "value": 2024 },
-          "duration": { "text": "6 mins", "value": 340 },
+          "distance": { "text": "0.9 km", "value": 930 },
+          "duration": { "text": "4 mins", "value": 225 },
+          "status": "OK"
+        },
+        {
+          "distance": { "text": "0.4 km", "value": 393 },
+          "duration": { "text": "2 mins", "value": 117 },
+          "status": "OK"
+        },
+        {
+          "distance": { "text": "1.1 km", "value": 1084 },
+          "duration": { "text": "5 mins", "value": 271 },
+          "status": "OK"
+        },
+        {
+          "distance": { "text": "0.7 km", "value": 732 },
+          "duration": { "text": "3 mins", "value": 185 },
           "status": "OK"
         }
       ]

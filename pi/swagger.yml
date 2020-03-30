@@ -1,0 +1,38 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: Swagger REST Article
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+# Paths supported by the server application
+paths:
+  /reservation/{parkingLotId}/{pin}:
+    get:
+      operationId: "reservation.lowerCone"
+      tags:
+        - "reservation"
+      summary: "The people data structure supported by the server application"
+      description: "Lower the cone"
+      parameters:
+        - name: parkingLotId
+          in: path
+          description: ID of parking lot to be reserved
+          type: string
+          required: True
+        - name: pin
+          in: path
+          description: Pin on the raspberry pi to raise up the cone
+          type: integer
+          required: True
+
+      responses:
+        200:
+          description: "Test succesful"
+          schema:
+            type: string

@@ -14,11 +14,11 @@ const carparkSchema = new mongoose.Schema({
     required: true,
     default: 0
   },
-  latitude: {
+  lat: {
     type: mongoose.Schema.Types.Number,
     required: true
   },
-  longitude: {
+  lng: {
     type: mongoose.Schema.Types.Number,
     required: true
   },
@@ -30,7 +30,7 @@ const carparkSchema = new mongoose.Schema({
   ]
   // neighbouringCarparks: [
   //   {
-  //     carParkName: { type: mongoose.Schema.Types.String, required: true },
+  //     carparkName: { type: mongoose.Schema.Types.String, required: true },
   //     latitude: { type: mongoose.Schema.Types.Number, required: true },
   //     longitude: { type: mongoose.Schema.Types.Number, required: true }
   //   }
