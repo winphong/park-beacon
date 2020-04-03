@@ -14,11 +14,11 @@ basePath: "/api"
 paths:
   /reservation/{carparkName}/{pin}:
     get:
-      operationId: "reservation.lowerCone"
+      operationId: "reservation.move_cone"
       tags:
         - "reservation"
       summary: "The people data structure supported by the server application"
-      description: "Lower the cone"
+      description: "Move the cone"
       parameters:
         - name: carparkName
           in: path
@@ -27,12 +27,42 @@ paths:
           required: True
         - name: pin
           in: path
-          description: Pin on the raspberry pi to raise up the cone
+          description: Pin on the raspberry pi to lower down / raise up the cone
           type: integer
           required: True
 
       responses:
         200:
-          description: "Test succesful"
+          description: "Cone moved succesfully"
+          schema:
+            type: string
+
+  /reservation/{carparkName}/{pin}/{expired}:
+    get:
+      operationId: "reservation.lower_cone"
+      tags:
+        - "reservation"
+      summary: "The people data structure supported by the server application"
+      description: "Lower the cone for expired reservation"
+      parameters:
+        - name: carparkName
+          in: path
+          description: ID of parking lot to be reserved
+          type: string
+          required: True
+        - name: pin
+          in: path
+          description: Pin on the raspberry pi to lower down / raise up the cone
+          type: integer
+          required: True
+        - name: expired
+          in: path
+          description: Validity status of the reservation
+          type: boolean
+          required: True
+
+      responses:
+        200:
+          description: "Cone lowered succesfully for expired reservation"
           schema:
             type: string

@@ -5,6 +5,7 @@ const _ = require("lodash");
 const carparks = require("./../util/carpark.json");
 const { getDistanceList } = require("../services/map");
 const logger = require("../util/logger")(module);
+const axios = require("axios");
 
 // Get all reservations of logged in customer
 makeReservation = async (customerId, event) => {
@@ -18,8 +19,10 @@ makeReservation = async (customerId, event) => {
     5. NOTE: Send push notification when the nearest carpark is full
   */
 
-  let reservation = await Reservation.findOne({ calendarEventId: event.id });
-  if (reservation) return; // don't make duplicate reservation for the same event
+  /** NOTE: Commented out to test
+   * let reservation = await Reservation.findOne({ calendarEventId: event.id });
+     if (reservation) return; // don't make duplicate reservation for the same event
+   */
 
   const destinations = carparks.map(carpark => _.pick(carpark, ["lat", "lng"]));
   const response = await getDistanceList(event.location, destinations);
@@ -74,10 +77,27 @@ makeReservation = async (customerId, event) => {
     reservation = new Reservation(body);
     await reservation.save().then(() => {
       // TODO: Send parkingLot.pin to Flask to lower the conse
-      // axios
-      //   .get(`http://172.31.134.73:5001/api/reservation/${parkingLot.pin}`)
-      //   .then(response => logger.info(response.data))
-      //   .catch(err => logger.error(err));
+      axios
+        .get(
+          // `http://172.31.134.73:5001/api/reservation/${carparkName}/${parkingLot.pin}`
+          `http://localhost:5001/api/reservation/${carparkName}/${parkingLot.pin}`
+        )
+        .then(response => {
+          logger.info(response.data);
+          setTimeout(() => {
+            console.log("timeouted");
+            axios
+              .get(
+                `http://localhost:5001/api/reservation/${carparkName}/${parkingLot.pin}/True`
+              )
+              .then(async () => {
+                console.log("cone lowered after timeout");
+                carpark.numOfSlotAvailable = carpark.numOfSlotAvailable + 1;
+                await carpark.save();
+              });
+          }, 60000 / 2);
+        })
+        .catch(err => logger.error(err));
       // TODO: break out of the loop once reservation is made
     });
   }

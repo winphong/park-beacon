@@ -10,9 +10,8 @@ module.exports = async () => {
   setInterval(async () => {
     const customers = await retrieveAllCustomer();
     const customer_events = await checkUpcomingEvents(customers);
-    console.log(customer_events);
     await makeReservationForAllUpcomingEvents(customer_events);
-  }, 4000);
+  }, 60000);
 
   /*
   1. Retrieve token of all customers

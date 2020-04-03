@@ -6,6 +6,7 @@ const Cryptr = require("cryptr");
 const cryptr = new Cryptr(process.env.SECRET_KEY);
 const { Customer } = require("../model/customer");
 const { getAuthUrl, getAccessToken } = require("../services/oauth");
+const { init, reset } = require("../services/setup");
 
 // Logging in as customer
 router.post("/", async (req, res) => {
@@ -53,6 +54,16 @@ router.post("/authorise", async (req, res) => {
   );
   const jwt = customer.generateAuthToken();
   res.send(jwt);
+});
+
+router.get("/reset", async (req, res) => {
+  await reset();
+  res.send("Reset complete");
+});
+
+router.get("/init", async (req, res) => {
+  await init();
+  res.send("Init complete");
 });
 
 // Getting customer [test purpose]
