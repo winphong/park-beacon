@@ -4,20 +4,16 @@ import socket
 import json
 
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(12, GPIO.OUT)  # PWM
-
-servo = GPIO.PWM(12, 50)
-servo.start(0)
 
 
-def lowerCone():
+def lowerCone(servo):
     servo.ChangeDutyCycle(1)  # turn towards 0 degree
     time.sleep(0.03)
     servo.ChangeDutyCycle(0)
     time.sleep(1)  # sleep 1 second
 
 
-def raiseCone():
+def raiseCone(servo):
     servo.ChangeDutyCycle(7)  # turn towards 0 degree
     time.sleep(0.03)
     servo.ChangeDutyCycle(0)
@@ -51,18 +47,22 @@ def server():
 
                 print(data)
 
+                GPIO.setup(data['pin'], GPIO.OUT)  # PWM
+                servo = GPIO.PWM(data['pin'], 50)
+                servo.start(0)
+
                 try:
                     if data['expired'] == True:
                         # NOTE: Timeout to lower the cone
-                        lowerCone()
+                        lowerCone(servo)
                         print("lower cone because reservation expired")
 
                     elif (data['carparkName'] == carparkName):
                         if (data['reserve'] == False):
-                            lowerCone()
+                            lowerCone(servo)
                             pass
                     elif (data['reserve'] == True):
-                        raiseCone()
+                        raiseCone(servo)
                         pass
 
                 except Exception:
