@@ -82,13 +82,15 @@ makeReservation = async (customerId, event) => {
         releaseCode: Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000,
       };
       reservation = new Reservation(body);
+
+      const pi = process.env.PI_PORT;
       await reservation.save().then((response) => {
         // TODO: Send parkingLot.pin to Flask to lower the conse
         console.log(response);
         axios
           .get(
             // `http://172.31.134.73:5001/api/reservation/${carparkName}/${parkingLot.pin}`
-            `http://192.168.43.184:5001/api/reservation/${carparkName}/${parkingLot.pin}`
+            `http://${pi}:5001/api/reservation/${carparkName}/${parkingLot.pin}`
           )
           .then((resp) => {
             logger.info(resp.data);
@@ -96,7 +98,7 @@ makeReservation = async (customerId, event) => {
               console.log("timeouted");
               axios
                 .get(
-                  `http://192.168.43.184:5001/api/reservation/${carparkName}/${parkingLot.pin}/True`
+                  `http://${pi}:5001/api/reservation/${carparkName}/${parkingLot.pin}/True`
                 )
                 .then(async () => {
                   console.log("cone lowered after timeout");

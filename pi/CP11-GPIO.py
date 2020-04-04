@@ -49,12 +49,11 @@ def server():
 
                 print(data)
 
-                pins.append(data['pin'])
-
                 if data['pin'] not in pins:
                     GPIO.setup(data['pin'], GPIO.OUT)  # PWM
                     servo = GPIO.PWM(data['pin'], 50)
                     servo.start(0)
+                    pins.append(data['pin'])
 
                 try:
                     if data['expired'] == True:
