@@ -23,7 +23,8 @@ def move_cone(carparkName, pin):
     s.send(json.dumps(
         {"carparkName": carparkName,
            "pin": pin,
-           "reserve": True}
+           "reserve": True,
+           "expired": False}
     ).encode('utf-8'))
 
     data = s.recv(1024).decode('utf-8')
