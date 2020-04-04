@@ -47,8 +47,8 @@ def server():
 
                 print(data)
 
-                GPIO.setup(data['pin'], GPIO.OUT)  # PWM
                 try:
+                    GPIO.setup(data['pin'], GPIO.OUT)  # PWM
                     servo = GPIO.PWM(data['pin'], 50)
                     servo.start(0)
                 except Exception:
@@ -64,9 +64,9 @@ def server():
                         if (data['reserve'] == False):
                             lowerCone(servo)
                             pass
-                    elif (data['reserve'] == True):
-                        raiseCone(servo)
-                        pass
+                        elif (data['reserve'] == True):
+                            raiseCone(servo)
+                            pass
 
                 except Exception:
                     print("bypassing exception")
