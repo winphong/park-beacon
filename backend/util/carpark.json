@@ -1,19 +1,5 @@
 [
   {
-    "carparkName": "Car Park 2A",
-    "lat": 1.300719,
-    "lng": 103.771672,
-    "landmark": "Faculty of Engineering",
-    "numOfSlotAvailable": 10
-  },
-  {
-    "carparkName": "Car Park 12B",
-    "lat": 1.292054,
-    "lng": 103.77562,
-    "landmark": "i3",
-    "numOfSlotAvailable": 15
-  },
-  {
     "carparkName": "Car Park 15",
     "lat": 1.293172,
     "lng": 103.771788,
@@ -26,12 +12,5 @@
     "lng": 103.775201,
     "landmark": "In front of IMRE and SSLS",
     "numOfSlotAvailable": 20
-  },
-  {
-    "carparkName": "Car Park 12",
-    "lat": 1.292814,
-    "lng": 103.774795,
-    "landmark": "Hon Sui Sen Memorial Library",
-    "numOfSlotAvailable": 10
   }
 ]

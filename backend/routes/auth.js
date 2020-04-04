@@ -9,7 +9,7 @@ const { getAuthUrl, getAccessToken } = require("../services/oauth");
 const { init, reset } = require("../services/setup");
 
 // Logging in as customer
-router.post("/", async (req, res) => {
+router.post("/login", async (req, res) => {
   // const { error } = validate(req.body);
   // if (error) return res.status(400).send(error.details[0].message);
   const { password, username } = req.body;

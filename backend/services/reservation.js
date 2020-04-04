@@ -19,90 +19,110 @@ makeReservation = async (customerId, event) => {
     5. NOTE: Send push notification when the nearest carpark is full
   */
 
-  /** NOTE: Commented out to test
-   * let reservation = await Reservation.findOne({ calendarEventId: event.id });
-     if (reservation) return; // don't make duplicate reservation for the same event
-   */
-
-  const destinations = carparks.map(carpark => _.pick(carpark, ["lat", "lng"]));
-  const response = await getDistanceList(event.location, destinations);
-
-  const distanceList = _.get(response, "rows[0].elements");
-
-  const carparkDistanceList = carparks.map((e, index) => {
-    return { ...carparks[index], ...distanceList[index] };
-  });
-  carparkDistanceList.sort((a, b) => a.distance.value - b.distance.value);
-
-  let carpark;
-  let parkingLot;
-
-  for (let i = 0; i < carparkDistanceList.length; i++) {
-    const { carparkName, lat, lng } = carparkDistanceList[i];
-
-    // Check carpark for empty slot
-    carpark = await Carpark.findOne({ carparkName })
-      .populate("parkingLots", "-__v")
-      .select("-__v");
-
-    if (!carpark) throw Error("Carpark not found");
-    if (carpark.numOfSlotAvailable > 0) {
-      carpark.numOfSlotAvailable = carpark.numOfSlotAvailable - 1;
-
-      const { _id } = carpark.parkingLots.find(
-        parkingLot => parkingLot.status === "VACANT"
-      );
-      parkingLot = await ParkingLot.findById(_id);
-      parkingLot.status = "RESERVED";
-
-      console.log("checking carpark availability");
-
-      await parkingLot.save();
-      await carpark.save();
-    } else {
-      // check next carpark
-      continue;
+  return new Promise(async (resolve, reject) => {
+    // NOTE: Commented out to test
+    let reservation;
+    try {
+      reservation = await Reservation.findOne({ calendarEventId: event.id });
+      if (reservation) return; // don't make duplicate reservation for the same event
+    } catch (err) {
+      return;
     }
 
-    console.log("making reservation");
+    const destinations = carparks.map((carpark) =>
+      _.pick(carpark, ["lat", "lng"])
+    );
+    const response = await getDistanceList(event.location, destinations);
 
-    // Make reservation
-    const body = {
-      carpark: { carparkName, lat, lng },
-      parkingLotNumber: parkingLot.parkingLotNumber,
-      customerId,
-      calendarEventId: event.id,
-      releaseCode: Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000
-    };
-    reservation = new Reservation(body);
-    await reservation.save().then(() => {
-      // TODO: Send parkingLot.pin to Flask to lower the conse
-      axios
-        .get(
-          // `http://172.31.134.73:5001/api/reservation/${carparkName}/${parkingLot.pin}`
-          `http://localhost:5001/api/reservation/${carparkName}/${parkingLot.pin}`
-        )
-        .then(response => {
-          logger.info(response.data);
-          setTimeout(() => {
-            console.log("timeouted");
-            axios
-              .get(
-                `http://localhost:5001/api/reservation/${carparkName}/${parkingLot.pin}/True`
-              )
-              .then(async () => {
-                console.log("cone lowered after timeout");
-                carpark.numOfSlotAvailable = carpark.numOfSlotAvailable + 1;
-                await carpark.save();
-              });
-          }, 60000 / 2);
-        })
-        .catch(err => logger.error(err));
-      // TODO: break out of the loop once reservation is made
+    const distanceList = _.get(response, "rows[0].elements");
+
+    const carparkDistanceList = carparks.map((e, index) => {
+      return { ...carparks[index], ...distanceList[index] };
     });
-  }
+    carparkDistanceList.sort((a, b) => a.distance.value - b.distance.value);
+
+    let carpark;
+    let parkingLot;
+
+    for (let i = 0; i < carparkDistanceList.length; i++) {
+      const { carparkName, lat, lng } = carparkDistanceList[i];
+
+      // Check carpark for empty slot
+      carpark = await Carpark.findOne({ carparkName })
+        .populate("parkingLots", "-__v")
+        .select("-__v");
+
+      if (!carpark) throw Error("Carpark not found");
+      if (carpark.numOfSlotAvailable > 0) {
+        carpark.numOfSlotAvailable = carpark.numOfSlotAvailable - 1;
+
+        const { _id } = carpark.parkingLots.find(
+          (parkingLot) => parkingLot.status === "VACANT"
+        );
+        parkingLot = await ParkingLot.findById(_id);
+        parkingLot.status = "RESERVED";
+
+        console.log("checking carpark availability");
+
+        await parkingLot.save();
+        await carpark.save();
+      } else {
+        // check next carpark
+        continue;
+      }
+
+      console.log("making reservation");
+
+      // Make reservation
+      const body = {
+        carpark: { carparkName, lat, lng },
+        parkingLotNumber: parkingLot.parkingLotNumber,
+        customerId,
+        calendarEventId: event.id,
+        releaseCode: Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000,
+      };
+      reservation = new Reservation(body);
+      await reservation.save().then((response) => {
+        // TODO: Send parkingLot.pin to Flask to lower the conse
+        console.log(response);
+        axios
+          .get(
+            // `http://172.31.134.73:5001/api/reservation/${carparkName}/${parkingLot.pin}`
+            `http://localhost:5001/api/reservation/${carparkName}/${parkingLot.pin}`
+          )
+          .then((resp) => {
+            logger.info(resp.data);
+            setTimeout(() => {
+              console.log("timeouted");
+              axios
+                .get(
+                  `http://localhost:5001/api/reservation/${carparkName}/${parkingLot.pin}/True`
+                )
+                .then(async () => {
+                  console.log("cone lowered after timeout");
+                  const carpark = await Carpark.findOne({
+                    carparkName: response.carpark.carparkName,
+                  });
+                  carpark.numOfSlotAvailable = carpark.numOfSlotAvailable + 1;
+                  const parkingLot = await ParkingLot.findOne({
+                    parkingLotNumber: response.parkingLotNumber,
+                  });
+                  parkingLot.status = "VACANT";
+                  await parkingLot.save();
+                  await carpark.save();
+                });
+            }, 30000);
+            resolve("Done");
+            // TODO: break out of the loop once reservation is made
+          })
+          .catch((err) => logger.error(err));
+      });
+      console.log("\nBreaking\n");
+      break;
+    }
+  });
 };
 
 module.exports = {
-  makeReservation
+  makeReservation,
 };
