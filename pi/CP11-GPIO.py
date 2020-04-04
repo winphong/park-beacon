@@ -7,17 +7,17 @@ GPIO.setmode(GPIO.BOARD)
 
 
 def lowerCone(servo):
+    print("lowering")
     servo.ChangeDutyCycle(1)  # turn towards 0 degree
-    time.sleep(0.03)
-    servo.ChangeDutyCycle(0)
     time.sleep(1)  # sleep 1 second
+    servo.ChangeDutyCycle(0)
 
 
 def raiseCone(servo):
+    print("raising")
     servo.ChangeDutyCycle(7)  # turn towards 0 degree
-    time.sleep(0.03)
-    servo.ChangeDutyCycle(0)
     time.sleep(1)  # sleep 1 second
+    servo.ChangeDutyCycle(0)
 
 
 def server():
@@ -63,10 +63,10 @@ def server():
                     elif (data['carparkName'] == carparkName):
                         if (data['reserve'] == False):
                             lowerCone(servo)
-                            pass
+                            print("lower cone")
                         elif (data['reserve'] == True):
                             raiseCone(servo)
-                            pass
+                            print("raise cone")
 
                 except Exception:
                     print("bypassing exception")
