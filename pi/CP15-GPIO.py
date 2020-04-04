@@ -47,9 +47,11 @@ def server():
 
                 print(data)
 
-                GPIO.setup(data['pin'], GPIO.OUT)  # PWM
-                servo = GPIO.PWM(data['pin'], 50)
-                servo.start(0)
+                try:
+                    servo = GPIO.PWM(data['pin'], 50)
+                    servo.start(0)
+                except Exception:
+                    print("xx")
 
                 try:
                     if data['expired'] == True:
