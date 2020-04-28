@@ -142,7 +142,7 @@ makeReservation = async (customerId, events) => {
                     await parkingLot.save();
                   }
                 });
-            }, 5000);
+            }, 30000);
             resolve("Done");
             // TODO: break out of the loop once reservation is made
           })

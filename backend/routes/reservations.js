@@ -79,10 +79,11 @@ router.post("/cancel/:id", async (req, res) => {
 });
 
 /* 
-  Mark reservation as cancelled and free up parking lot and increment num of available slot in carpark
-  @param : reservationId
+  Free up parking lot and increment num of available slot in carpark once the parked car leaves
+  @body : 1) carparkName (written in GPIO programme)
+          2) pin of the cone lowered after car leave (distance sensor on the floor of each parking lot?)
 */
-router.post("/vacate/:pin", async (req, res) => {
+router.post("/vacate", async (req, res) => {
   const { carparkName, pin } = req.body;
 
   const parkingLot = await ParkingLot.findOne({ pin });

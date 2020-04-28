@@ -13,7 +13,7 @@ module.exports = async () => {
     const customers = await retrieveAllCustomer();
     const customer_events = await checkUpcomingEvents(customers);
     await makeReservationForAllUpcomingEvents(customer_events);
-  }, 10000);
+  }, 60000);
 
   /*
   1. Retrieve token of all customers
@@ -53,60 +53,6 @@ makeReservationForAllUpcomingEvents = async (customer_events) => {
 
   async.map(customer_events, ({ customer, events }) => {
     setTimeout(() => {
-      // async.waterfall(
-      //   [
-      //     function doOne(callback) {
-      //       // Try getting the data from the first website
-      //       makeReservation(customer._id, events[0])
-      //         .then(async (response) => {
-      //           await sleep(5000).then(() => {
-      //             console.log(events.length);
-
-      //             if (events.length === 1) {
-      //               console.log("if");
-      //               callback(err, null);
-      //             } else callback(null);
-      //           });
-      //         })
-      //         .catch((err) => callback(err, null));
-      //     },
-      //     function doTwo(callback) {
-      //       makeReservation(customer._id, events[1])
-      //         .then(async (response) => {
-      //           await sleep(5000).then(() => {
-      //             console.log(events.length);
-      //             if (events.length === 2) {
-      //               console.log("if");
-      //               callback(err, null);
-      //             } else callback(null);
-      //           });
-      //         })
-      //         .catch((err) => callback(err, null));
-      //     },
-      //     function doThree(callback) {
-      //       makeReservation(customer._id, events[2])
-      //         .then(async (response) => {
-      //           await sleep(5000);
-      //           if (events.length === 3) callback(err, null);
-      //           else callback(null);
-      //         })
-      //         .catch((err) => callback(err, null));
-      //     },
-      //     function doFour(callback) {
-      //       makeReservation(customer._id, events[3])
-      //         .then(async (response) => {
-      //           await sleep(5000);
-      //           console.log(events.length);
-
-      //           if (events.length === 4) callback(err, null);
-      //           else callback(null);
-      //         })
-      //         .catch((err) => callback(err, null));
-      //     },
-      //   ],
-      //   // optional callback
-      //   async function (err, results) {}
-      // );
       makeReservation(customer._id, events);
     }, index * 3000);
     index += 1;
