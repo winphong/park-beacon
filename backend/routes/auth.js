@@ -42,13 +42,14 @@ router.post("/register", async (req, res) => {
 // Receive authorise code to Google Calendar
 router.post("/authorise", async (req, res) => {
   const { username, code } = req.body;
+  console.log(username, code);
   // convert code to token
   const token = await getAccessToken(code);
   const customer = await Customer.findOneAndUpdate(
     { username },
     {
       token: cryptr.encrypt(JSON.stringify(token)),
-      authorised: true
+      authorised: true,
     },
     { new: true, useFindAndModify: false }
   );

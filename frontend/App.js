@@ -1,38 +1,44 @@
-import React from 'react';
-import {
-  StyleSheet,
-  View,
-  StatusBar
-} from 'react-native';
-import { Provider } from 'react-redux';
-import store from './src/config/store';
+import React from "react";
+import { StyleSheet, View, StatusBar } from "react-native";
+import Drawer from "./routes/Drawer";
+import { Provider } from "react-redux";
+import store from "./src/config/store";
 
-import Routes from './src/Routes';
-import Login from './src/pages/Login';
-import Signup from './src/pages/Signup';
+import Routes from "./src/Routes";
+import Login from "./src/pages/Login";
+// import Navigator from './routes/homeStack';
+import Register from "./src/pages/Register";
+import Authorise from "./src/pages/Authorise";
+// import Home from './src/pages/Home';
+// import Reservations from './src/pages/Reservations';
+import { NavigationContainer } from "@react-navigation/native";
+
+import Screens from "./routes/Homestack";
 
 export default function App() {
   return (
-    <Provider store={store}>
+    // <Provider store={store}>
+    <NavigationContainer>
       <View style={styles.container}>
-        <StatusBar
-          backgroundColor='#4527a0'
-          barStyle="light-content"
-        />
-        {/* <Routes/> */}
-        {/* <Login/> */}
-        <Signup />
+        <StatusBar backgroundColor="#65499c" barStyle="light-content" />
+        {/* <Routes /> */}
+        {/* <Login /> */}
+        {/* <Register /> */}
+        {/* <Home /> */}
+        {/* <Drawer/> */}
+        {/* <Navigator/> */}
+        {/* <Reservations/> */}
+        <Screens />
       </View>
-    </Provider>
+    </NavigationContainer>
+    // </Provider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#ffffff",
+    justifyContent: "center",
   },
 });
-

@@ -20,7 +20,7 @@ export default class Logo extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 30,
+        paddingTop: 20,
         flexGrow: 1,
         justifyContent: 'center',
         alignItems: 'center'

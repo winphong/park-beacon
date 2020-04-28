@@ -6,17 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { register } from "./../actions/customerActions";
 
 export default Form = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [carplate, setCarplate] = useState("");
-
-  const handleRegister = async () => {
-    await register({ username, password, carPlateNumber: carplate });
-  };
-
   return (
     <View style={styles.container}>
       <TextInput
@@ -41,7 +32,7 @@ export default Form = () => {
         // ref={(input) => (this.password = input)}
         // onSubmitEditing={() => this.carplate.focus()}
       />
-      <TextInput
+      {/* <TextInput
         style={styles.inputBox}
         placeholder="Carplate Number"
         placeholderTextColor="#ffffff"
@@ -49,10 +40,10 @@ export default Form = () => {
         onChangeText={(text) => {
           setCarplate(text.trim());
         }}
-        // ref={(input) => (this.carplate = input)}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Register</Text>
+        ref={(input) => (this.carplate = input)}
+      /> */}
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
     </View>
   );
