@@ -6,24 +6,27 @@ const customerSchema = new mongoose.Schema({
   username: {
     type: mongoose.Schema.Types.String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: mongoose.Schema.Types.String,
-    required: true
+    required: true,
   },
   carPlateNumber: {
     type: mongoose.Schema.Types.String,
-    required: true
+    required: true,
   },
   token: {
-    type: mongoose.Schema.Types.String
+    type: mongoose.Schema.Types.String,
   },
   authorised: {
     type: mongoose.Schema.Types.Boolean,
     required: true,
-    default: false
-  }
+    default: false,
+  },
+  pushNotificationToken: {
+    type: mongoose.Schema.Types.String,
+  },
 });
 
 customerSchema.methods.generateAuthToken = () => {
@@ -31,7 +34,7 @@ customerSchema.methods.generateAuthToken = () => {
     {
       // _id: this.id,
       username: this.username,
-      carPlateNumber: this.carPlateNumber
+      carPlateNumber: this.carPlateNumber,
     },
     config.get("jwtPrivateKey")
   );

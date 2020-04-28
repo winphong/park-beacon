@@ -9,11 +9,11 @@ const async = require("async");
 
 module.exports = async () => {
   setInterval(async () => {
+    console.log("timer");
     const customers = await retrieveAllCustomer();
     const customer_events = await checkUpcomingEvents(customers);
-    console.log("timerr");
     await makeReservationForAllUpcomingEvents(customer_events);
-  }, 60000);
+  }, 10000);
 
   /*
   1. Retrieve token of all customers
@@ -34,6 +34,7 @@ checkUpcomingEvents = async (customers) => {
     customers.map(async (customer) => {
       const oAuth2Client = authorise(customer.token);
       const events = await listEvents(oAuth2Client);
+      // console.log(events);
       // if (events.length > 0) {
       return { customer, events };
       // }
@@ -48,57 +49,66 @@ checkUpcomingEvents = async (customers) => {
 };
 
 makeReservationForAllUpcomingEvents = async (customer_events) => {
-  customer_events.map(({ customer, events }) => {
-    async.waterfall(
-      [
-        function doOne(callback) {
-          // Try getting the data from the first website
-          makeReservation(customer._id, events[0])
-            .then((response) => {
-              console.log("response");
-              console.log(response);
-              callback(null);
-            })
-            .catch((err) => callback(err, null));
-        },
-        function doTwo(callback) {
-          makeReservation(customer._id, events[1])
-            .then((response) => {
-              console.log("response");
-              console.log(response);
-              callback(null);
-            })
-            .catch((err) => callback(err, null));
-        },
-        function doThree(callback) {
-          // Try getting the data from the first website
-          makeReservation(customer._id, events[2])
-            .then((response) => {
-              console.log("response");
-              console.log(response);
-              callback(null);
-            })
-            .catch((err) => callback(err, null));
-        },
-        function doFour(callback) {
-          makeReservation(customer._id, events[3])
-            .then((response) => {
-              console.log("response");
-              console.log(response);
-              callback(null);
-            })
-            .catch((err) => callback(err, null));
-        },
-      ],
-      // optional callback
-      function (err, results) {
-        console.log(results);
-        console.log(err);
+  let index = 0;
 
-        // Now do something with the data.
-      }
-    );
+  async.map(customer_events, ({ customer, events }) => {
+    setTimeout(() => {
+      // async.waterfall(
+      //   [
+      //     function doOne(callback) {
+      //       // Try getting the data from the first website
+      //       makeReservation(customer._id, events[0])
+      //         .then(async (response) => {
+      //           await sleep(5000).then(() => {
+      //             console.log(events.length);
+
+      //             if (events.length === 1) {
+      //               console.log("if");
+      //               callback(err, null);
+      //             } else callback(null);
+      //           });
+      //         })
+      //         .catch((err) => callback(err, null));
+      //     },
+      //     function doTwo(callback) {
+      //       makeReservation(customer._id, events[1])
+      //         .then(async (response) => {
+      //           await sleep(5000).then(() => {
+      //             console.log(events.length);
+      //             if (events.length === 2) {
+      //               console.log("if");
+      //               callback(err, null);
+      //             } else callback(null);
+      //           });
+      //         })
+      //         .catch((err) => callback(err, null));
+      //     },
+      //     function doThree(callback) {
+      //       makeReservation(customer._id, events[2])
+      //         .then(async (response) => {
+      //           await sleep(5000);
+      //           if (events.length === 3) callback(err, null);
+      //           else callback(null);
+      //         })
+      //         .catch((err) => callback(err, null));
+      //     },
+      //     function doFour(callback) {
+      //       makeReservation(customer._id, events[3])
+      //         .then(async (response) => {
+      //           await sleep(5000);
+      //           console.log(events.length);
+
+      //           if (events.length === 4) callback(err, null);
+      //           else callback(null);
+      //         })
+      //         .catch((err) => callback(err, null));
+      //     },
+      //   ],
+      //   // optional callback
+      //   async function (err, results) {}
+      // );
+      makeReservation(customer._id, events);
+    }, index * 3000);
+    index += 1;
   });
 };
-
-checkExpiredReservation = () => {};

@@ -8,16 +8,18 @@ GPIO.setmode(GPIO.BOARD)
 
 def lowerCone(servo):
     print("lowering")
-    servo.ChangeDutyCycle(1)  # turn towards 0 degree
-    time.sleep(0.05)  # sleep 0.05 second to prevent jerking
+    servo.ChangeDutyCycle(2)  # turn towards 0 degree
+    time.sleep(0.5)  # sleep 0.05 second to prevent jerking
     servo.ChangeDutyCycle(0)
+    servo.stop()
 
 
 def raiseCone(servo):
     print("raising")
     servo.ChangeDutyCycle(7)  # turn towards 0 degree
-    time.sleep(0.05)  # sleep 0.05 second
+    time.sleep(0.5)  # sleep 0.05 second
     servo.ChangeDutyCycle(0)
+    servo.stop()
 
 
 def server():
@@ -51,9 +53,10 @@ def server():
 
                 if data['pin'] not in pins:
                     GPIO.setup(data['pin'], GPIO.OUT)  # PWM
-                    servo = GPIO.PWM(data['pin'], 50)
-                    servo.start(0)
                     pins.append(data['pin'])
+
+                servo = GPIO.PWM(data['pin'], 50)
+                servo.start(0)
 
                 try:
                     if data['expired'] == True:

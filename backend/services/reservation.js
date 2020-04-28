@@ -8,7 +8,7 @@ const logger = require("../util/logger")(module);
 const axios = require("axios");
 
 // Get all reservations of logged in customer
-makeReservation = async (customerId, event) => {
+makeReservation = async (customerId, events) => {
   /* 
     TODO:
     0. Ensure the reservation has been made for the event (check calendarEventId in all reservations)
@@ -19,15 +19,27 @@ makeReservation = async (customerId, event) => {
     5. NOTE: Send push notification when the nearest carpark is full
   */
 
+  let event;
+
   return new Promise(async (resolve, reject) => {
     // NOTE: Commented out to test
     let reservation;
     try {
-      reservation = await Reservation.findOne({ calendarEventId: event.id });
-      if (reservation) return; // don't make duplicate reservation for the same event
+      for (let i = 0; i < events.length; i++) {
+        reservation = await Reservation.findOne({
+          calendarEventId: events[i].id,
+        });
+        if (!reservation) {
+          // prevent duplicate reservation for the same event
+          event = events[i];
+          break;
+        }
+      }
     } catch (err) {
       return;
     }
+
+    if (!event) return;
 
     const destinations = carparks.map((carpark) =>
       _.pick(carpark, ["lat", "lng"])
@@ -84,15 +96,16 @@ makeReservation = async (customerId, event) => {
       reservation = new Reservation(body);
 
       const pi = process.env.PI_PORT;
+
       await reservation.save().then((response) => {
-        // TODO: Send parkingLot.pin to Flask to lower the conse
-        console.log(response);
+        // console.log(response);
+        // Send parkingLot.pin to Flask to lower the conse
         axios
           .get(
             // `http://172.31.134.73:5001/api/reservation/${carparkName}/${parkingLot.pin}`
             `http://${pi}:5001/api/reservation/${carparkName}/${parkingLot.pin}`
           )
-          .then((resp) => {
+          .then(async (resp) => {
             logger.info(resp.data);
             setTimeout(() => {
               console.log("timeouted");
@@ -102,22 +115,41 @@ makeReservation = async (customerId, event) => {
                 )
                 .then(async () => {
                   console.log("cone lowered after timeout");
-                  const carpark = await Carpark.findOne({
-                    carparkName: response.carpark.carparkName,
-                  });
-                  carpark.numOfSlotAvailable = carpark.numOfSlotAvailable + 1;
+
                   const parkingLot = await ParkingLot.findOne({
                     parkingLotNumber: response.parkingLotNumber,
                   });
-                  parkingLot.status = "VACANT";
-                  await parkingLot.save();
-                  await carpark.save();
+
+                  // if after timeout and the parking lot is still not occupied
+                  if (parkingLot.status === "RESERVED") {
+                    parkingLot.status = "VACANT";
+
+                    const carpark = await Carpark.findOne({
+                      carparkName: response.carpark.carparkName,
+                    });
+                    carpark.numOfSlotAvailable = carpark.numOfSlotAvailable + 1;
+
+                    const reservation = await Reservation.findOne({
+                      calendarEventId: event.id,
+                    });
+                    // if parking lot is not occupied after timeout, reservation should still be RESERVED as well
+                    if (reservation.status === "RESERVED") {
+                      reservation.status = "EXPIRED";
+                      await reservation.save();
+                    }
+
+                    await carpark.save();
+                    await parkingLot.save();
+                  }
                 });
-            }, 30000);
+            }, 5000);
             resolve("Done");
             // TODO: break out of the loop once reservation is made
           })
-          .catch((err) => logger.error(err));
+          .catch((err) => {
+            console.log(err);
+            logger.error(err);
+          });
       });
       console.log("\nBreaking\n");
       break;
