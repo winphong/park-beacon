@@ -5,6 +5,7 @@ import { createAppContainer } from "react-navigation";
 import Home from "../src/pages/Home";
 import Reservations from "../src/pages/Reservations";
 import Login from "../src/pages/Login";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const DrawerNavigator = createDrawerNavigator(
   {
@@ -16,6 +17,16 @@ const DrawerNavigator = createDrawerNavigator(
     },
     Logout: {
       screen: Login,
+      navigationOptions: {
+        drawerLabel: "Logout",
+        drawerIcon: ({ focused }) => (
+          <MaterialCommunityIcons
+            name="logout"
+            size={25}
+            color={focused ? "#0D47A1" : "black"}
+          />
+        ),
+      },
     },
   },
   {

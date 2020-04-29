@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,40 +9,28 @@ import {
 } from "react-native";
 import Logo from "../components/Logo";
 import * as WebBrowser from "expo-web-browser";
-import { login } from "./../actions/auth";
-// import { Actions } from "react-native-router-flux";
-// import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { login, updateJwt, logout } from "../redux/actions/authActions";
 
 export default Login = (props) => {
-  //   const navigationOptions = {
-  //     drawerLabel: "Logout",
-  //     drawerIcon: ({ focused }) => (
-  //       <MaterialCommunityIcons
-  //         name="logout"
-  //         size={25}
-  //         color={focused ? "#0D47A1" : "black"}
-  //       />
-  //     ),
-  //   };
-
   const { navigation } = props;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(logout());
+  }, []);
 
   const handleLogin = async () => {
     const { data } = await login({ username, password });
     if (data.jwt) {
-      navigation.navigate("Home");
+      dispatch(updateJwt(data.jwt));
     } else if (data.authUrl) {
       Alert.alert(
         "Grant access to Google Calendar",
         null,
         [
-          //   {
-          //     text: "Cancel",
-          //     onPress: () => console.log("Cancel Pressed"),
-          //     style: "cancel",
-          //   },
           {
             text: "Open browser",
             onPress: async () =>
