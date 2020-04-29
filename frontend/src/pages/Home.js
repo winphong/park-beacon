@@ -24,7 +24,6 @@ export default Home = (props) => {
   useEffect(() => {
     if (jwt) {
       const customer = jwtDecode(jwt);
-      console.log(customer);
       const registerPushNotificationToken = async () => {
         if (customer && !pushNotifGenerated) {
           SplashScreen.hide();

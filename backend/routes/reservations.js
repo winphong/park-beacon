@@ -34,7 +34,7 @@ router.get("/pushNotification", async (req, res) => {
     })
     .then((response) => {
       console.log(response.data);
-      res.send("GOOD");
+      res.send("Push notification test success");
     })
     .catch((err) => {
       console.log(err.response.data.errors);
@@ -43,11 +43,13 @@ router.get("/pushNotification", async (req, res) => {
 });
 
 // Get all reservations of logged in customer
-router.get("/:id", async (req, res) => {
-  const customerId = req.params.id;
+router.get("/:customerId", async (req, res) => {
+  const customerId = req.params.customerId;
+  console.log(customerId);
   const reservations = await Reservation.find({ customerId }).sort({
     dateTime: -1,
   });
+
   res.send(reservations);
 });
 
@@ -109,7 +111,11 @@ router.post("/cancel/:id", async (req, res) => {
   await parkingLot.save();
   await reservation.save();
 
-  res.send(reservation);
+  const reservations = await Reservation.find({
+    customerId: reservation.customerId,
+  });
+
+  res.send(reservations);
 });
 
 /* 

@@ -114,7 +114,7 @@ makeReservation = async (customerId, events) => {
               to: customer.pushNotificationToken,
               sound: "default",
               // title: "Upcoming reservation",
-              body: "You reservation at XX is coming up in 15 minutes!",
+              body: `Your reservation at ${carparkName}, lot ${parkingLot.parkingLotNumber} is coming up in 10 minutes!`,
               // data: { data: "goes here" },
               _displayInForeground: true,
             };
