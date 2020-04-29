@@ -1,14 +1,28 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, FlatList, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, FlatList, Text, TouchableOpacity, Alert } from 'react-native';
 
-export default function Card() {
+export default function Card({ navigation }) {
     const [reservations, selectedReservation] = useState([
         { carparkName: 'NUS Computing', parkingLotNumber: 'A123', dateTime: '25 June', id: '1' },
         { carparkName: 'NUS Arts', parkingLotNumber: 'B123', dateTime: '28 June', id: '2' },
     ]);
 
-    const onPress = () => {
-        this.props.navigation.navigate('ReservationDetails');
+    const cancelBookingHandler = () => {
+        Alert.alert(
+            "Confirmation",
+            "Cancel reservation booking?",
+            [
+                {
+                    text: "Yes",
+                    onPress: () => console.log("Booking cancelled."),
+                },
+                {
+                    text: "No",
+                    onPress: () => console.log("Booking is not cancelled."),
+                }
+            ],
+            { cancelable: false }
+        );
     }
 
     return (
@@ -19,14 +33,13 @@ export default function Card() {
                 renderItem={({ item }) => (
                     <View style={styles.card} >
                         <TouchableOpacity
-                            onPress={onPress}
+                            onPress={cancelBookingHandler}
                             style={[
                                 styles.item,
                                 { backgroundColor: reservations ? '#fff' : 'purple' },
                             ]}
                         >
                             <View style={styles.cardContent}>
-
                                 <Text style={styles.date}>{item.dateTime}</Text>
                                 <Text>{item.carparkName}</Text>
                             </View>

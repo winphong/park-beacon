@@ -1,7 +1,6 @@
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
 import Reservations from '../src/pages/Reservations';
-import ReservationDetails from '../src/pages/ReservationDetails';
 
 const screens = {
     Reservations: {
@@ -10,9 +9,6 @@ const screens = {
             title: 'My Reservations',
         }
     },
-    ReservationDetails: {
-        screen: ReservationDetails
-    }
 }
 
 const ReservationStack = createStackNavigator(screens, {

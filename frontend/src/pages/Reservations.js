@@ -5,7 +5,7 @@ import {
     View,
     TouchableHighlight
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { DrawerActions } from 'react-navigation-drawer';
 import Card from '../components/Card';
 
@@ -30,8 +30,8 @@ export default class Reservations extends Component {
     static navigationOptions = {
         drawerLabel: 'Reservations',
         drawerIcon: ({ focused }) => (
-            <MaterialIcons
-                name="schedule"
+            <MaterialCommunityIcons
+                name="calendar-multiselect"
                 size={25}
                 color={focused ? '#0D47A1' : 'black'}
             />
