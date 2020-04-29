@@ -1,6 +1,6 @@
 import axios from "axios";
-import { BACKEND_URL } from "../constants/routes";
-
+import { BACKEND_URL } from "../../constants/routes";
+import { CUSTOMER_LOGIN, LOGOUT } from "./types";
 const AUTH_BASE_URL = BACKEND_URL + "/api/auth";
 
 export const registerAccount = (request) => {
@@ -33,3 +33,12 @@ export const authorise = (request) => {
       console.log(err);
     });
 };
+
+export const updateJwt = (jwt) => ({
+  type: CUSTOMER_LOGIN,
+  jwt: jwt,
+});
+
+export const logout = () => ({
+  type: LOGOUT,
+});

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   CheckBox,
 } from "react-native";
-import { registerAccount } from "../actions/auth";
+import { registerAccount } from "../redux/actions/authActions";
 
 export default Register = (props) => {
   const { navigation } = props;
@@ -34,7 +34,7 @@ export default Register = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerCont}>
-        <Text style={styles.headerText}>toR an Account</Text>
+        <Text style={styles.headerText}>Register for Account</Text>
       </View>
       <TextInput
         style={styles.inputBox}

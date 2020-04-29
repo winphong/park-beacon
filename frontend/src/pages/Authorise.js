@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { authorise } from "../actions/auth";
+import { authorise } from "../redux/actions/authActions";
 
 export default Authorise = (props) => {
   const { navigation, route } = props;
