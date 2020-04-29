@@ -6,13 +6,11 @@ import store from "./src/config/store";
 
 import Routes from "./src/Routes";
 import Login from "./src/pages/Login";
-// import Navigator from './routes/homeStack';
 import Register from "./src/pages/Register";
 import Authorise from "./src/pages/Authorise";
 // import Home from './src/pages/Home';
 // import Reservations from './src/pages/Reservations';
 import { NavigationContainer } from "@react-navigation/native";
-
 import Screens from "./routes/Screens";
 
 export default function App() {

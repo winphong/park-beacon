@@ -15,7 +15,7 @@ const _ = require("lodash");
 
 async function saveToSecureStore(state) {
   try {
-    await AsyncStorage.setItem("state", state);
+    await AsyncStorage.setItem("jwt", state.customer.jwt);
   } catch (err) {
     console.log(err);
   }
@@ -33,16 +33,16 @@ let store = createStore(
 
 const loadLoggedInCustomer = () => {
   return (dispatch) => {
-    AsyncStorage.getItem("state", (err, result) => {
+    AsyncStorage.getItem("jwt", (err, result) => {
       if (err) {
         //console.log(err);
         SplashScreen.hide();
         return initialState;
       }
-      if (_.get(result, "customer.jwt")) {
+      if (result) {
         dispatch({
           type: CUSTOMER_LOGIN,
-          jwt: jsog.parse(result).customer.jwt,
+          jwt: result,
         });
         //console.log(result)
       } else {
