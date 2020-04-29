@@ -57,7 +57,6 @@ export default Homestack = (props) => {
           headerShown: false,
         }}
       />
-      )}
     </Stack.Navigator>
   );
 };

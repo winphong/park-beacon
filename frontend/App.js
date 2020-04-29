@@ -13,7 +13,7 @@ import Authorise from "./src/pages/Authorise";
 // import Reservations from './src/pages/Reservations';
 import { NavigationContainer } from "@react-navigation/native";
 
-import Screens from "./routes/Homestack";
+import Screens from "./routes/homeStack";
 
 export default function App() {
   return (

@@ -22,7 +22,7 @@ export default class Home extends Component {
     }
     render() {
         return (
-            <View style={styles.view}>
+            <View style={styles.container}>
                 <TouchableHighlight onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())}
                     style={styles.touchableHighlight}>
                     <MaterialIcons
@@ -31,7 +31,7 @@ export default class Home extends Component {
                         color='black'
                     />
                 </TouchableHighlight>
-                <View style={styles.container}>
+                <View style={styles.banner}>
                     <Image style={{ width: 250, height: 150 }}
                         source={require('../images/park-beacon.png')} />
                     <Text style={styles.text}>Your best parking companion.</Text>
@@ -47,13 +47,16 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         flexGrow: 1,
         justifyContent: 'center',
-        alignItems: 'center'
-    },
-    view: {
-        flex: 1,
         alignItems: 'center',
+        backgroundColor: 'white'
+    },
+    banner: {
+        flex: 1,
+        paddingTop: 40,
+        flexGrow: 1,
         justifyContent: 'center',
-        backgroundColor: 'white',
+        alignItems: 'center',
+        backgroundColor: 'white'
     },
     text: {
         flex: 1,
@@ -82,5 +85,5 @@ const styles = StyleSheet.create({
     image: {
         width: 10,
         height: 10
-    }
+    },
 })

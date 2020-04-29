@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, FlatList, Text, TouchableHighlight } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleSheet, View, FlatList, Text, TouchableOpacity } from 'react-native';
 
 export default function Card() {
     const [reservations, selectedReservation] = useState([
         { carparkName: 'NUS Computing', parkingLotNumber: 'A123', dateTime: '25 June', id: '1' },
         { carparkName: 'NUS Arts', parkingLotNumber: 'B123', dateTime: '28 June', id: '2' },
     ]);
+
+    const onPress = () => {
+        this.props.navigation.navigate('ReservationDetails');
+    }
 
     return (
         <View style={styles.container}>
@@ -15,18 +18,19 @@ export default function Card() {
                 data={reservations}
                 renderItem={({ item }) => (
                     <View style={styles.card} >
-                        <View style={styles.cardContent}>
-                            <TouchableOpacity
-                                // onPress={onPress}
-                                style={[
-                                    styles.item,
-                                    { backgroundColor: reservations ? 'white' : 'purple' },
-                                ]}
-                            >
+                        <TouchableOpacity
+                            onPress={onPress}
+                            style={[
+                                styles.item,
+                                { backgroundColor: reservations ? '#fff' : 'purple' },
+                            ]}
+                        >
+                            <View style={styles.cardContent}>
+
                                 <Text style={styles.date}>{item.dateTime}</Text>
                                 <Text>{item.carparkName}</Text>
-                            </TouchableOpacity>
-                        </View>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 )}
             />
@@ -56,7 +60,7 @@ const styles = StyleSheet.create({
     },
     cardContent: {
         marginHorizontal: 18,
-        marginVertical: 10
+        marginVertical: 5
     },
     touchableHighlight: {
         width: 50,
