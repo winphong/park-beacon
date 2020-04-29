@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View, StatusBar } from "react-native";
 import Drawer from "./routes/Drawer";
 import { Provider } from "react-redux";
@@ -12,8 +12,20 @@ import Authorise from "./src/pages/Authorise";
 // import Reservations from './src/pages/Reservations';
 import { NavigationContainer } from "@react-navigation/native";
 import Screens from "./routes/Screens";
+import { Notifications, SplashScreen } from "expo";
 
 export default function App() {
+  useEffect(() => {
+    SplashScreen.preventAutoHide();
+    if (Platform.OS === "android") {
+      Notifications.createChannelAndroidAsync("default", {
+        name: "default",
+        sound: true,
+        vibrate: [0, 250, 250, 250],
+      });
+    }
+  }, []);
+
   return (
     <Provider store={store}>
       <NavigationContainer>

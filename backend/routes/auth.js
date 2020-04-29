@@ -42,7 +42,6 @@ router.post("/register", async (req, res) => {
 // Receive authorise code to Google Calendar
 router.post("/authorise", async (req, res) => {
   const { username, code } = req.body;
-  console.log(username, code);
   // convert code to token
   const token = await getAccessToken(code);
   const customer = await Customer.findOneAndUpdate(
@@ -55,6 +54,17 @@ router.post("/authorise", async (req, res) => {
   );
   const jwt = customer.generateAuthToken();
   res.send(jwt);
+});
+
+// Register push notification token
+router.post("/registerPushNotificationToken", async (req, res) => {
+  const { username, pushNotificationToken } = req.body;
+  const customer = await Customer.findOne({ username });
+  if (!customer) return res.status(404).send("Customer does not exist!");
+
+  customer.pushNotificationToken = pushNotificationToken;
+  await customer.save();
+  res.send("Push notification token registered");
 });
 
 router.get("/reset", async (req, res) => {

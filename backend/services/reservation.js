@@ -1,5 +1,6 @@
 const { Reservation } = require("../model/reservation");
 const { Carpark } = require("../model/carpark");
+const { Customer } = require("../model/customer");
 const { ParkingLot } = require("../model/parkingLot");
 const _ = require("lodash");
 const carparks = require("./../util/carpark.json");
@@ -106,7 +107,32 @@ makeReservation = async (customerId, events) => {
             `http://${pi}:5001/api/reservation/${carparkName}/${parkingLot.pin}`
           )
           .then(async (resp) => {
-            logger.info(resp.data);
+            // logger.info(resp.data);
+
+            const customer = await Customer.findById(customerId);
+            const message = {
+              to: customer.pushNotificationToken,
+              sound: "default",
+              // title: "Upcoming reservation",
+              body: "You reservation at XX is coming up in 15 minutes!",
+              // data: { data: "goes here" },
+              _displayInForeground: true,
+            };
+
+            await axios
+              .post("https://exp.host/--/api/v2/push/send", message, {
+                headers: {
+                  Accept: "application/json",
+                  "Accept-encoding": "gzip, deflate",
+                  "Content-Type": "application/json",
+                },
+              })
+              .then((response) => {
+                console.log("Push notification sent!");
+                return response;
+              })
+              .catch((err) => console.log("Error", err.response.data.errors));
+
             setTimeout(() => {
               console.log("timeouted");
               axios
@@ -115,7 +141,6 @@ makeReservation = async (customerId, events) => {
                 )
                 .then(async () => {
                   console.log("cone lowered after timeout");
-
                   const parkingLot = await ParkingLot.findOne({
                     parkingLotNumber: response.parkingLotNumber,
                   });
