@@ -14,12 +14,16 @@ const DATA = [
         carparkName: 'NUS Computing', 
         parkingLotNumber: 'A123', 
         dateTime: '25 June', 
+        parkingLotNumber: 'C3288A',
+        parkingLotStatus: 'RESERVED',
         id: '1' 
     },
     { 
         carparkName: 'NUS Arts', 
         parkingLotNumber: 'B123', 
         dateTime: '28 June', 
+        parkingLotNumber: 'A4519B',
+        parkingLotStatus: 'VACANT',
         id: '2' 
     },
 ];

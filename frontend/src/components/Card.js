@@ -3,14 +3,14 @@ import { StyleSheet, View, FlatList, Text, TouchableOpacity, Alert } from 'react
 
 export default function Card({ navigation }) {
     const [reservations, selectedReservation] = useState([
-        { carparkName: 'NUS Computing', parkingLotNumber: 'A123', dateTime: '25 June', id: '1' },
-        { carparkName: 'NUS Arts', parkingLotNumber: 'B123', dateTime: '28 June', id: '2' },
+        { carparkName: 'NUS Computing', parkingLotNumber: 'A123', dateTime: '25 June', time: '1200', parkingLotStatus: 'RESERVED', id: '1' },
+        { carparkName: 'NUS Arts', parkingLotNumber: 'B123', dateTime: '28 June', time: '1430', parkingLotStatus: 'VACANT', id: '2' },
     ]);
 
     const cancelBookingHandler = () => {
         Alert.alert(
             "Confirmation",
-            "Cancel reservation booking?",
+            "Cancel reservation?",
             [
                 {
                     text: "Yes",
@@ -41,7 +41,10 @@ export default function Card({ navigation }) {
                         >
                             <View style={styles.cardContent}>
                                 <Text style={styles.date}>{item.dateTime}</Text>
-                                <Text>{item.carparkName}</Text>
+                                <Text style={styles.text}>Location: {item.time}</Text>
+                                <Text style={styles.text}>Location: {item.carparkName}</Text>
+                                <Text style={styles.text}>Parking Lot Number: {item.parkingLotNumber}</Text>
+                                <Text style={styles.text}>Parking Lot Status: {item.parkingLotStatus}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -73,7 +76,7 @@ const styles = StyleSheet.create({
     },
     cardContent: {
         marginHorizontal: 18,
-        marginVertical: 5
+        marginVertical: 5,
     },
     touchableHighlight: {
         width: 50,
@@ -89,5 +92,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'purple',
         padding: 10,
         margin: 10
+    },
+    text: {
+        fontSize: 16
     }
 })
