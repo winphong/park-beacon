@@ -5,7 +5,7 @@ import {
     View,
     TouchableHighlight
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { DrawerActions } from 'react-navigation-drawer';
 import Card from '../components/Card';
 
@@ -14,12 +14,16 @@ const DATA = [
         carparkName: 'NUS Computing', 
         parkingLotNumber: 'A123', 
         dateTime: '25 June', 
+        parkingLotNumber: 'C3288A',
+        parkingLotStatus: 'RESERVED',
         id: '1' 
     },
     { 
         carparkName: 'NUS Arts', 
         parkingLotNumber: 'B123', 
         dateTime: '28 June', 
+        parkingLotNumber: 'A4519B',
+        parkingLotStatus: 'VACANT',
         id: '2' 
     },
 ];
@@ -30,8 +34,8 @@ export default class Reservations extends Component {
     static navigationOptions = {
         drawerLabel: 'Reservations',
         drawerIcon: ({ focused }) => (
-            <MaterialIcons
-                name="schedule"
+            <MaterialCommunityIcons
+                name="calendar-multiselect"
                 size={25}
                 color={focused ? '#0D47A1' : 'black'}
             />
