@@ -6,12 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { authorise } from "../redux/actions/authActions";
+import { authorise, updateJwt } from "../redux/actions/authActions";
 
 export default Authorise = (props) => {
   const { navigation, route } = props;
   const { username } = route.params;
-
+  const jwt = useSelector((state) => state.customer.jwt);
   const [code, setCode] = useState("");
 
   const handleSubmitKey = async () => {
@@ -20,13 +20,22 @@ export default Authorise = (props) => {
       code,
     })
       .then((resp) => {
-        if (resp.status === 200) navigation.navigate("Home");
-        else alert("An error has occured, please try again");
+        if (resp.status === 200) {
+          const { data } = resp;
+          if (data.jwt) {
+            dispatch(updateJwt(data.jwt));
+          }
+        } else alert("An error has occured, please try again");
       })
       .catch((err) => {
         alert("An error has occured, please try again");
       });
   };
+
+  useEffect(() => {
+    console.log(jwt);
+    navigation.navigate("Home");
+  }, [jwt]);
 
   const toLogin = () => {
     navigation.navigate("Login");

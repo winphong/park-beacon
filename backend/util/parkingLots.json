@@ -10,12 +10,12 @@
     "status": "VACANT"
   },
   {
-    "pin": 12,
+    "pin": 35,
     "parkingLotNumber": "B1",
     "status": "VACANT"
   },
   {
-    "pin": 35,
+    "pin": 12,
     "parkingLotNumber": "B2",
     "status": "VACANT"
   }
