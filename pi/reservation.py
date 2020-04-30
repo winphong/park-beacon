@@ -3,7 +3,7 @@ import socket
 import json
 
 
-def move_cone(carparkName, pin):
+def move_cone(carparkName, pin, lower):
     '''
     This function send a request to GPIO-server to
     lower the cone by specifying the pin to lower the cone
@@ -20,12 +20,20 @@ def move_cone(carparkName, pin):
     s = socket.socket()
     s.connect((host, port))
 
-    s.send(json.dumps(
-        {"carparkName": carparkName,
-           "pin": pin,
-           "reserve": True,
-           "expired": False}
-    ).encode('utf-8'))
+    if lower:
+        s.send(json.dumps(
+            {"carparkName": carparkName,
+             "pin": pin,
+             "reserve": False,
+             "expired": False}
+        ).encode('utf-8'))
+    else:
+        s.send(json.dumps(
+            {"carparkName": carparkName,
+             "pin": pin,
+             "reserve": True,
+             "expired": False}
+        ).encode('utf-8'))
 
     data = s.recv(1024).decode('utf-8')
     print('Received from server: ' + data)

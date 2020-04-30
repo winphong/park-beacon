@@ -70,9 +70,21 @@ router.post("/attend", async (req, res) => {
     res.status(404).send("No reservation found!");
   }
 
+  if (!(customer && reservation))
+    res
+      .status(404)
+      .send(
+        `The customer with carplate ${carplate} does not have any upcoming reservation`
+      );
+
   const parkingLot = await ParkingLot.findOne({
     parkingLotNumber: reservation.parkingLotNumber,
   });
+
+  if (reservation)
+    await axios.get(
+      `http://${pi}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`
+    );
 
   parkingLot.status = "OCCUPIED";
   reservation.status = "COMPLETED";
@@ -106,6 +118,10 @@ router.post("/cancel/:id", async (req, res) => {
   carpark.numOfSlotAvailable = carpark.numOfSlotAvailable + 1;
   parkingLot.status = "VACANT";
   reservation.status = "CANCELLED";
+
+  await axios.get(
+    `http://${pi}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`
+  );
 
   await carpark.save();
   await parkingLot.save();

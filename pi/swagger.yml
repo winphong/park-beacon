@@ -12,7 +12,7 @@ basePath: "/api"
 
 # Paths supported by the server application
 paths:
-  /reservation/{carparkName}/{pin}:
+  /reservation/{carparkName}/{pin}/{lower}:
     get:
       operationId: "reservation.move_cone"
       tags:
@@ -30,6 +30,11 @@ paths:
           description: Pin on the raspberry pi to lower down / raise up the cone
           type: integer
           required: True
+        - name: lower
+          in: path
+          description: Lowering of cone
+          type: boolean
+          required: True
 
       responses:
         200:
@@ -37,7 +42,7 @@ paths:
           schema:
             type: string
 
-  /reservation/{carparkName}/{pin}/{expired}:
+  /reservation-expired/{carparkName}/{pin}/{expired}:
     get:
       operationId: "reservation.lower_cone"
       tags:

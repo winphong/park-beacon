@@ -104,7 +104,7 @@ makeReservation = async (customerId, events) => {
         axios
           .get(
             // `http://172.31.134.73:5001/api/reservation/${carparkName}/${parkingLot.pin}`
-            `http://${pi}:5001/api/reservation/${carparkName}/${parkingLot.pin}`
+            `http://${pi}:5001/api/reservation/${carparkName}/${parkingLot.pin}/False`
           )
           .then(async (resp) => {
             // logger.info(resp.data);
@@ -137,7 +137,7 @@ makeReservation = async (customerId, events) => {
               console.log("timeouted");
               axios
                 .get(
-                  `http://${pi}:5001/api/reservation/${carparkName}/${parkingLot.pin}/True`
+                  `http://${pi}:5001/api/reservation-expired/${carparkName}/${parkingLot.pin}/True`
                 )
                 .then(async () => {
                   console.log("cone lowered after timeout");
