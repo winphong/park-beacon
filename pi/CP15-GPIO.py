@@ -91,7 +91,7 @@ def server():
 
             # for pin 32 only since there's only 1 ultrasonic sensor
             if (dist > 20 and vacant == False):
-                if 32 in pins:
+                if 32 not in pins:
                     GPIO.setup(32, GPIO.OUT)  # PWM
                     pins.append(32)
 

@@ -82,25 +82,25 @@ def server():
             # TODO: Motion sensor to trigger capturing of carplate
             # TODO: Take photo
             # TODO: Analyse photo to lower the cone
-            dist = distance()
-            print("Measured Distance = %.1f cm" % dist)
-            time.sleep(1)
+            # dist = distance()
+            # print("Measured Distance = %.1f cm" % dist)
+            # time.sleep(1)
 
-            if (dist <= 20):
-                vacant = False
+            # if (dist <= 20):
+            #     vacant = False
 
-            # for pin 32 only since there's only 1 ultrasonic sensor
-            if (dist > 20 and vacant == False):
-                if 32 in pins:
-                    GPIO.setup(32, GPIO.OUT)  # PWM
-                    pins.append(32)
+            # # for pin 32 only since there's only 1 ultrasonic sensor
+            # if (dist > 20 and vacant == False):
+            #     if 32 not in pins:
+            #         GPIO.setup(32, GPIO.OUT)  # PWM
+            #         pins.append(32)
 
-                servo = GPIO.PWM(32, 50)
-                servo.start(0)
+            #     servo = GPIO.PWM(32, 50)
+            #     servo.start(0)
 
-                lowerCone(servo)
+            #     lowerCone(servo)
 
-                vacant = True
+            #     vacant = True
 
             try:
                 client_socket, address = s.accept()
