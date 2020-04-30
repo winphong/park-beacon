@@ -34,7 +34,7 @@ export default Register = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerCont}>
-        <Text style={styles.headerText}>Register for Account</Text>
+        <Text style={styles.headerText}>Create an Account</Text>
       </View>
       <TextInput
         style={styles.inputBox}
