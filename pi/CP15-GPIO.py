@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import time
 import socket
 import json
+import requests
 
 GPIO.setmode(GPIO.BOARD)
 GPIO_TRIGGER = 16
@@ -11,9 +12,7 @@ GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
 GPIO.setup(GPIO_ECHO, GPIO.IN)
 
 GPIO.output(GPIO_TRIGGER, False)
-
 print("Waiting For Sensor To Settle")
-
 time.sleep(2)
 
 
@@ -75,6 +74,11 @@ def server():
 
     pins = []
     vacant = True
+    count = 0
+    ultrasonic_sensor_pin = ultrasonic_sensor_pin
+
+    vacate_url = "http://{}:5000/api/reservation/vacate"
+    headers = {'content-type': 'application/json'}
 
     try:
         while True:
@@ -86,21 +90,26 @@ def server():
             print("Measured Distance = %.1f cm" % dist)
             time.sleep(1)
 
+            # parking lot occupied by car
             if (dist <= 20):
                 vacant = False
 
+            # parking lot is occupied but sensor value shows vacant => car left
             # for pin 32 only since there's only 1 ultrasonic sensor
             if (dist > 20 and vacant == False):
-                if 32 not in pins:
-                    GPIO.setup(32, GPIO.OUT)  # PWM
-                    pins.append(32)
+                count = count + 1
 
-                servo = GPIO.PWM(32, 50)
-                servo.start(0)
-
-                lowerCone(servo)
-
+            # count = 3 to ensure the sensor value is accurate before confirming
+            # that the slot is indeed empty
+            if (count >= 3):
+                # Send request to node to vacate
+                requests.post(vacate_url,
+                              headers=headers, data=json.dumps({
+                                  'carparkName': carparkName,
+                                  'pin': ultrasonic_sensor_pin,
+                              }))
                 vacant = True
+                count = 0
 
             try:
                 client_socket, address = s.accept()

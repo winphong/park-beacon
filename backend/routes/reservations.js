@@ -60,18 +60,19 @@ router.get("/:customerId", async (req, res) => {
 router.post("/attend", async (req, res) => {
   const { carplate } = req.body;
   const customer = await Customer.findOne({ carplate });
-  if (!customer) res.status(404).send("Carplate not registered to any user!");
+  if (!customer)
+    return res.status(404).send("Carplate not registered to any user!");
 
   const reservation = await Reservation.findOne({
     customerId: customer._id,
     status: "RESERVED",
   });
   if (!reservation) {
-    res.status(404).send("No reservation found!");
+    return res.status(404).send("No reservation found!");
   }
 
   if (!(customer && reservation))
-    res
+    return res
       .status(404)
       .send(
         `The customer with carplate ${carplate} does not have any upcoming reservation`
@@ -104,7 +105,7 @@ router.post("/cancel/:id", async (req, res) => {
 
   const reservation = await Reservation.findById(reservationId);
   if (!reservation) {
-    res.status(404).send("Reservation not found!");
+    return res.status(404).send("Reservation not found!");
   }
 
   const parkingLot = await ParkingLot.findOne({
@@ -141,10 +142,15 @@ router.post("/cancel/:id", async (req, res) => {
 */
 router.post("/vacate", async (req, res) => {
   const { carparkName, pin } = req.body;
+  console.log(req.body);
 
   const parkingLot = await ParkingLot.findOne({ pin });
   if (!parkingLot) {
-    res.status(404).send("Parking lot not found!");
+    return res.status(404).send("Parking lot not found!");
+  } else if (parkingLot.status === "VACANT") {
+    return res
+      .status(400)
+      .send("Parking lot is not reserved / occupied in the first place");
   }
 
   const carpark = await Carpark.findOne({
@@ -158,7 +164,7 @@ router.post("/vacate", async (req, res) => {
   await carpark.save();
   await parkingLot.save();
 
-  res.send(reservation);
+  res.send("Parking lot is now vacated");
 });
 
 module.exports = router;
