@@ -11,8 +11,6 @@ export default function (state = initialState, action) {
         ...state,
         reservations: action.reservations,
       };
-    case types.SET_NULL:
-      return initialState;
     default:
       return state;
   }

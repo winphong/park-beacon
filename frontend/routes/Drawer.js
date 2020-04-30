@@ -24,6 +24,16 @@ const DrawerNavigator = createDrawerNavigator(
     },
     Reservations: {
       screen: Reservations,
+      navigationOptions: {
+        drawerLabel: "Reservations",
+        drawerIcon: ({ focused }) => (
+          <MaterialCommunityIcons
+            name="calendar-multiselect"
+            size={25}
+            color={focused ? "#0D47A1" : "black"}
+          />
+        ),
+      },
     },
     Logout: {
       screen: Login,

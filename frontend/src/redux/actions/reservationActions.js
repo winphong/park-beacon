@@ -7,7 +7,6 @@ import * as Permissions from "expo-permissions";
 const RESERVATION_BASE_URL = BACKEND_URL + "/api/reservation";
 
 export const retrieveReservationsByCustomerId = (customerId) => {
-  console.log(customerId);
   return (dispatch) => {
     axios
       .get(RESERVATION_BASE_URL + `/${customerId}`)
@@ -37,10 +36,6 @@ export const cancelReservation = (reservationId) => {
       });
   };
 };
-
-export const setNull = (reservations) => ({
-  type: SET_NULL,
-});
 
 // export const authorise = (request) => {
 //   return axios

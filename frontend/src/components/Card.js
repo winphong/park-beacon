@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -8,43 +8,20 @@ import {
   Alert,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { useFocusEffect } from "@react-navigation/native";
 import {
   retrieveReservationsByCustomerId,
   cancelReservation,
-  setNull,
 } from "./../redux/actions/reservationActions";
 import dateformat from "dateformat";
 import jwtDecode from "jwt-decode";
+import { NavigationEvents } from "react-navigation";
 
 const _ = require("lodash");
 
-export default Card = ({ navigation }) => {
+export default Card = () => {
   const dispatch = useDispatch();
   const jwt = useSelector((state) => state.customer.jwt);
   const reservations = useSelector((state) => state.reservation.reservations);
-
-  useEffect(() => {
-    if (jwt) {
-      const customer = jwtDecode(jwt);
-      dispatch(retrieveReservationsByCustomerId(customer.id));
-    }
-  }, []);
-
-  //   useFocusEffect(
-  //     React.useCallback(() => {
-  //       console.log("focus effect");
-  //       if (jwt) {
-  //         const customer = jwtDecode(jwt);
-  //         dispatch(retrieveReservationsByCustomerId(customer.id));
-  //         console.log("called");
-  //       }
-
-  //       return () => {
-  //         dispatch(setNull());
-  //       };
-  //     }, [_.isEqual(reservations)])
-  //   );
 
   const cancelBookingHandler = (reservationId) => {
     Alert.alert(
@@ -68,6 +45,14 @@ export default Card = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <NavigationEvents
+        onDidFocus={(payload) => {
+          if (jwt) {
+            const customer = jwtDecode(jwt);
+            dispatch(retrieveReservationsByCustomerId(customer.id));
+          }
+        }}
+      />
       <Text>Tap on reservation to cancel</Text>
       <FlatList
         keyExtractor={(item) => item._id}
