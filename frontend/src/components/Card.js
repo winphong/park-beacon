@@ -53,7 +53,7 @@ export default Card = () => {
           }
         }}
       />
-      <Text>Tap on reservation to cancel</Text>
+      <Text style={styles.note}>Tap on reservation to CANCEL the reservation.</Text>
       <FlatList
         keyExtractor={(item) => item._id}
         data={reservations}
@@ -98,6 +98,11 @@ const styles = StyleSheet.create({
   date: {
     fontWeight: "bold",
     fontSize: 18,
+  },
+  note: {
+    fontStyle: 'italic',
+    fontSize: 13,
+    textAlign: 'center'
   },
   card: {
     borderRadius: 5,
