@@ -5,6 +5,7 @@ from openalpr import Alpr
 import datetime
 import os
 import requests
+import json
 
 # Pin  Definitions
 pirSensorPin = 40
@@ -12,6 +13,8 @@ pirSensorPin = 40
 # Pin Setup
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(pirSensorPin, GPIO.IN)
+
+endpoint = "http://172.31.118.198:5000/api/reservation/attend"
 
 
 def scan(expectedCar):
@@ -21,7 +24,6 @@ def scan(expectedCar):
         # Send information over
         carplateNum = ""
         carplateList = []
-        endpoint = "http://192.168.1.94:5000/api/reservation/attend"
 
         # Take Photo
         print("Taking picture")
@@ -59,21 +61,22 @@ def scan(expectedCar):
                     print(candidate['plate'])
 
                     # See if it's a match w/ expected carplate
-                    #if candidate['plate'] in expectedCar:
-                        #print("FOUND")
-                        #return
+                    # if candidate['plate'] in expectedCar:
+                    # print("FOUND")
+                    # return
                     carplateNum = candidate(['plate'])
-                    #Can do some filtering here
+                    # Can do some filtering here
                     carplateList.append(carplateNum)
-        
+
         print(carplateList)
-        carplateList = json.dumps(carplateList)
-        test = requests.post(url=endpoint, json=carplateList)
+
+        test = requests.post(url=endpoint, json=json.dumps(
+            {'carplates': carplateList}))
         # Print out status code
         print(test)
         # Print out the information sent over
-        print(test.json())
-    except:
+    except Exception:
+        console.log("error")
         return
 
 

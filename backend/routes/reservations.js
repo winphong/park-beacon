@@ -56,10 +56,19 @@ router.get("/:customerId", async (req, res) => {
 /* 
   Mark reservation status as complete
   @body : carplate from the pi camera scan result
+  
+  @client : camera 
 */
 router.post("/attend", async (req, res) => {
-  const { carplate } = req.body;
-  const customer = await Customer.findOne({ carplate });
+  const { carplates } = req.body;
+  console.log(carplates);
+  let customer;
+
+  for (let i = 0; i < carplates.length; i++) {
+    customer = await Customer.findOne({ carplate });
+    if (customer) break;
+  }
+
   if (!customer)
     return res.status(404).send("Carplate not registered to any user!");
 
@@ -99,9 +108,11 @@ router.post("/attend", async (req, res) => {
 /* 
   Mark reservation as cancelled and free up parking lot and increment num of available slot in carpark
   @param : reservationId
+  
+  @client : customer (mobile app) 
 */
-router.post("/cancel/:id", async (req, res) => {
-  const reservationId = req.params.id;
+router.post("/cancel/:reservationId", async (req, res) => {
+  const reservationId = req.params.reservationId;
 
   const reservation = await Reservation.findById(reservationId);
   if (!reservation) {
@@ -120,6 +131,7 @@ router.post("/cancel/:id", async (req, res) => {
   parkingLot.status = "VACANT";
   reservation.status = "CANCELLED";
 
+  // lower the cone
   await axios.get(
     `http://${pi}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`
   );
@@ -139,6 +151,8 @@ router.post("/cancel/:id", async (req, res) => {
   Free up parking lot and increment num of available slot in carpark once the parked car leaves
   @body : 1) carparkName (written in GPIO programme)
           2) pin of the cone lowered after car leave (distance sensor on the floor of each parking lot?)
+
+  @client : CPXX-GPIO.py 
 */
 router.post("/vacate", async (req, res) => {
   const { carparkName, pin } = req.body;
@@ -147,10 +161,10 @@ router.post("/vacate", async (req, res) => {
   const parkingLot = await ParkingLot.findOne({ pin });
   if (!parkingLot) {
     return res.status(404).send("Parking lot not found!");
-  } else if (parkingLot.status === "VACANT") {
+  } else if (parkingLot.status !== "OCCUPIED") {
     return res
       .status(400)
-      .send("Parking lot is not reserved / occupied in the first place");
+      .send("Parking lot is not occupied in the first place");
   }
 
   const carpark = await Carpark.findOne({
