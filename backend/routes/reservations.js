@@ -6,6 +6,7 @@ const { ParkingLot } = require("../model/parkingLot");
 const { Carpark } = require("../model/carpark");
 const axios = require("axios");
 const _ = require("lodash");
+const pi = process.env.PI_PORT;
 
 // TODO: Add in customer middleware
 
@@ -33,19 +34,16 @@ router.get("/pushNotification", async (req, res) => {
       },
     })
     .then((response) => {
-      console.log(response.data);
       res.send("Push notification test success");
     })
     .catch((err) => {
-      console.log(err.response.data.errors);
-      res.status(400).send(err.response.data.errors);
+      if (err.response.data) res.status(400).send(err.response.data.errors);
     });
 });
 
 // Get all reservations of logged in customer
 router.get("/:customerId", async (req, res) => {
   const customerId = req.params.customerId;
-  console.log(customerId);
   const reservations = await Reservation.find({ customerId }).sort({
     dateTime: -1,
   });
@@ -61,48 +59,55 @@ router.get("/:customerId", async (req, res) => {
 */
 router.post("/attend", async (req, res) => {
   const { carplates } = req.body;
-  console.log(carplates);
   let customer;
+  let response;
 
-  for (let i = 0; i < carplates.length; i++) {
-    customer = await Customer.findOne({ carplate });
-    if (customer) break;
-  }
+  Promise.all(
+    carplates.map(async (carplate) => {
+      response = await Customer.findOne({ carPlateNumber: carplate });
+      if (response) customer = response;
+    })
+  )
+    .then(async () => {
+      if (!customer)
+        return res.status(404).send("Carplate not registered to any user!");
 
-  if (!customer)
-    return res.status(404).send("Carplate not registered to any user!");
+      const reservation = await Reservation.findOne({
+        customerId: customer._id,
+        status: "RESERVED",
+      });
+      if (!reservation) {
+        return res.status(404).send("No reservation found!");
+      }
 
-  const reservation = await Reservation.findOne({
-    customerId: customer._id,
-    status: "RESERVED",
-  });
-  if (!reservation) {
-    return res.status(404).send("No reservation found!");
-  }
+      if (!(customer && reservation))
+        return res
+          .status(404)
+          .send(
+            `The customer with carplate ${carplate} does not have any upcoming reservation`
+          );
 
-  if (!(customer && reservation))
-    return res
-      .status(404)
-      .send(
-        `The customer with carplate ${carplate} does not have any upcoming reservation`
-      );
+      const parkingLot = await ParkingLot.findOne({
+        parkingLotNumber: reservation.parkingLotNumber,
+      });
 
-  const parkingLot = await ParkingLot.findOne({
-    parkingLotNumber: reservation.parkingLotNumber,
-  });
+      if (reservation)
+        await axios.get(
+          `http://${pi}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`
+        );
 
-  if (reservation)
-    await axios.get(
-      `http://${pi}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`
-    );
+      parkingLot.status = "OCCUPIED";
+      reservation.status = "COMPLETED";
 
-  parkingLot.status = "OCCUPIED";
-  reservation.status = "COMPLETED";
+      await parkingLot.save();
+      await reservation.save();
 
-  await parkingLot.save();
-  await reservation.save();
-
-  res.send(reservation);
+      res.send(reservation);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).send("ERROR");
+    });
 });
 
 /* 
@@ -156,9 +161,9 @@ router.post("/cancel/:reservationId", async (req, res) => {
 */
 router.post("/vacate", async (req, res) => {
   const { carparkName, pin } = req.body;
-  console.log(req.body);
 
   const parkingLot = await ParkingLot.findOne({ pin });
+
   if (!parkingLot) {
     return res.status(404).send("Parking lot not found!");
   } else if (parkingLot.status !== "OCCUPIED") {
