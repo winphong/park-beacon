@@ -12,18 +12,14 @@ Connect the pulse of servo motor to PIN 12, ground to PIN 6, and power to PIN 2.
 
 ### Raspberry Pi
 
-In your raspberry pi, `git pull https://github.com/winphong/park-beacon.git`
+In your raspberry pi, `git clone https://github.com/winphong/park-beacon.git`
 
 Navigate to `pi`
 
-Run `python -m pip install Flask`
-Run `python -m pip install connexion`
+Run `python3 -m pip install Flask`
+Run `python3 -m pip install connexion==2.3.0`
 
-If you encounter problem installing connexion, it might be due to Python3.6+ is not installed in Raspberry Pi by default. Follow this [guide](https://medium.com/@isma3il/install-python-3-6-or-3-7-and-pip-on-raspberry-pi-85e657aadb1e) to get it installed.
-
-Run `python -m pip install connexion` to install once Python3.6+ has been installed.
-
-Run `python client.py` / `python3 client.py` to start the Flask server.
+Run `python3 client.py` to start the Flask server.
 Run `python CP11-GPIO.py` to start the CP11 GPIO programme.
 Run `python CP15-GPIO.py` to start the CP15 GPIO programme.
 
@@ -35,7 +31,7 @@ Navigate to `backend` and run `npm install`
 
 Identify your PI IP address and ensure that your PI and laptop is connected to the same network and can connect to each other on VNC.
 
-Run `PI_PORT={YOUR_PI_IP} NODE_ENV=custom-environment-variables nodemon` to start the Node programme. Ensure that `Connected to mongodb+...` is printed on the screen.
+Run `PI_IP_1={YOUR_PI_1_IP} PI_IP_2={YOUR_PI_2_IP} NODE_ENV=custom-environment-variables nodemon` to start the Node programme. Ensure that `Connected to mongodb+...` is printed on the screen.
 
 Using Postman, send a `GET` request to `http://localhost:5000/api/auth/reset` to reset the state of the database.
 

@@ -6,7 +6,8 @@ const { ParkingLot } = require("../model/parkingLot");
 const { Carpark } = require("../model/carpark");
 const axios = require("axios");
 const _ = require("lodash");
-const pi = process.env.PI_PORT;
+const pi1 = process.env.PI_IP_1;
+const pi2 = process.env.PI_IP_2;
 
 // TODO: Add in customer middleware
 
@@ -92,9 +93,12 @@ router.post("/attend", async (req, res) => {
       });
 
       if (reservation)
-        await axios.get(
-          `http://${pi}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`
-        );
+        if (carparkName === "Car Park 11")
+          await axios.get(
+            `http://${pi2}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`
+          );
+        else if (carparkName === "Car Park 15")
+          `http://${pi1}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`;
 
       parkingLot.status = "OCCUPIED";
       reservation.status = "COMPLETED";
@@ -137,9 +141,13 @@ router.post("/cancel/:reservationId", async (req, res) => {
   reservation.status = "CANCELLED";
 
   // lower the cone
-  await axios.get(
-    `http://${pi}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`
-  );
+  const carparkName = reservation.carpark.carparkName;
+  if (carparkName === "Car Park 11")
+    await axios.get(
+      `http://${pi2}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`
+    );
+  else if (carparkName === "Car Park 15")
+    `http://${pi1}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`;
 
   await carpark.save();
   await parkingLot.save();

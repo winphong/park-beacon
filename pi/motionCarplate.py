@@ -14,10 +14,10 @@ pirSensorPin = 40
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(pirSensorPin, GPIO.IN)
 
-endpoint = "http://172.31.118.198:5000/api/reservation/attend"
+endpoint = "http://{}:5000/api/reservation/attend".format("192.168.43.245")
 
 
-def scan(expectedCar):
+def scan():
     try:
         print("Starting scan")
 
@@ -58,39 +58,33 @@ def scan(expectedCar):
             # Print out carplates
             for plate in results['results']:
                 for candidate in plate['candidates']:
-                    print(candidate['plate'])
-
-                    # See if it's a match w/ expected carplate
-                    # if candidate['plate'] in expectedCar:
-                    # print("FOUND")
-                    # return
-                    carplateNum = candidate(['plate'])
-                    # Can do some filtering here
+                    carplateNum = candidate['plate']
+                    print(carplateNum)
+                    # TODO: Filter irrelevant carplate result before sending to note
                     carplateList.append(carplateNum)
 
         print(carplateList)
-
-        test = requests.post(url=endpoint, json=json.dumps(
-            {'carplates': carplateList}))
+        response = requests.post(
+            url=endpoint, json={'carplates': carplateList})
         # Print out status code
-        print(test)
+        print(response)
         # Print out the information sent over
     except Exception:
-        console.log("error")
+        print("error")
         return
 
 
 # Main Method
 try:
     while True:
-        if GPIO.input(pirSensorPin):
-            print('Motion detected')
-            scan("SDN7484U")  # need to change the carplate number
+        # if GPIO.input(pirSensorPin):
+        # print('Motion detected')
+        scan()  # need to change the carplate number
 
-        else:
-            print('No motion detected')
+        # else:
+        # print('No motion detected')
 
-        time.sleep(8)
+        time.sleep(6)
 
 except KeyboardInterrupt:
     GPIO.cleanup()

@@ -96,16 +96,19 @@ makeReservation = async (customerId, events) => {
       };
       reservation = new Reservation(body);
 
-      const pi = process.env.PI_PORT;
+      const pi1 = process.env.PI_IP_1; // CP15
+      const pi2 = process.env.PI_IP_2; // CP11
+      let pi_url;
+
+      if (carparkName === "Car Park 11")
+        pi_url = `http://${pi2}:5001/api/reservation/${carparkName}/${parkingLot.pin}/False`;
+      else if (carparkName === "Car Park 15")
+        pi_url = `http://${pi1}:5001/api/reservation/${carparkName}/${parkingLot.pin}/False`;
 
       await reservation.save().then((response) => {
-        // console.log(response);
         // Send parkingLot.pin to Flask to lower the conse
         axios
-          .get(
-            // `http://172.31.134.73:5001/api/reservation/${carparkName}/${parkingLot.pin}`
-            `http://${pi}:5001/api/reservation/${carparkName}/${parkingLot.pin}/False`
-          )
+          .get(pi_url)
           .then(async (resp) => {
             // logger.info(resp.data);
 
@@ -135,38 +138,34 @@ makeReservation = async (customerId, events) => {
 
             setTimeout(() => {
               console.log("timeouted");
-              axios
-                .get(
-                  `http://${pi}:5001/api/reservation-expired/${carparkName}/${parkingLot.pin}/True`
-                )
-                .then(async () => {
-                  console.log("cone lowered after timeout");
-                  const parkingLot = await ParkingLot.findOne({
-                    parkingLotNumber: response.parkingLotNumber,
-                  });
-
-                  // if after timeout and the parking lot is still not occupied
-                  if (parkingLot.status === "RESERVED") {
-                    parkingLot.status = "VACANT";
-
-                    const carpark = await Carpark.findOne({
-                      carparkName: response.carpark.carparkName,
-                    });
-                    carpark.numOfSlotAvailable = carpark.numOfSlotAvailable + 1;
-
-                    const reservation = await Reservation.findOne({
-                      calendarEventId: event.id,
-                    });
-                    // if parking lot is not occupied after timeout, reservation should still be RESERVED as well
-                    if (reservation.status === "RESERVED") {
-                      reservation.status = "EXPIRED";
-                      await reservation.save();
-                    }
-
-                    await carpark.save();
-                    await parkingLot.save();
-                  }
+              axios.get(pi_url).then(async () => {
+                console.log("cone lowered after timeout");
+                const parkingLot = await ParkingLot.findOne({
+                  parkingLotNumber: response.parkingLotNumber,
                 });
+
+                // if after timeout and the parking lot is still not occupied
+                if (parkingLot.status === "RESERVED") {
+                  parkingLot.status = "VACANT";
+
+                  const carpark = await Carpark.findOne({
+                    carparkName: response.carpark.carparkName,
+                  });
+                  carpark.numOfSlotAvailable = carpark.numOfSlotAvailable + 1;
+
+                  const reservation = await Reservation.findOne({
+                    calendarEventId: event.id,
+                  });
+                  // if parking lot is not occupied after timeout, reservation should still be RESERVED as well
+                  if (reservation.status === "RESERVED") {
+                    reservation.status = "EXPIRED";
+                    await reservation.save();
+                  }
+
+                  await carpark.save();
+                  await parkingLot.save();
+                }
+              });
             }, 30000);
             resolve("Done");
             // TODO: break out of the loop once reservation is made

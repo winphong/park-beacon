@@ -75,9 +75,10 @@ def server():
     pins = []
     vacant = True
     count = 0
-    ultrasonic_sensor_pin = ultrasonic_sensor_pin
+    ultrasonic_sensor_pin = 33
 
-    vacate_url = "http://{}:5000/api/reservation/vacate"
+    vacate_url = "http://{}:5000/api/reservation/vacate".format(
+        "192.168.43.245")
     headers = {'content-type': 'application/json'}
 
     try:
@@ -95,7 +96,7 @@ def server():
                 vacant = False
 
             # parking lot is occupied but sensor value shows vacant => car left
-            # for pin 32 only since there's only 1 ultrasonic sensor
+            # for ultrasonic_sensor pin only since there's only 1 ultrasonic sensor
             if (dist > 20 and vacant == False):
                 count = count + 1
 
@@ -104,10 +105,10 @@ def server():
             if (count >= 3):
                 # Send request to node to vacate
                 requests.post(vacate_url,
-                              headers=headers, data=json.dumps({
+                              headers=headers, json={
                                   'carparkName': carparkName,
                                   'pin': ultrasonic_sensor_pin,
-                              }))
+                              })
                 vacant = True
                 count = 0
 
