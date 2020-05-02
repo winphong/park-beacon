@@ -75,7 +75,7 @@ def server():
     pins = []
     vacant = True
     count = 0
-    ultrasonic_sensor_pin = 33
+    ultrasonic_sensor_pin = 32
 
     vacate_url = "http://{}:5000/api/reservation/vacate".format(
         "192.168.43.245")

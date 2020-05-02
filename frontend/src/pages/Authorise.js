@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { authorise, updateJwt } from "../redux/actions/authActions";
+import { useSelector, useDispatch } from "react-redux";
 
 export default Authorise = (props) => {
   const { navigation, route } = props;
   const { username } = route.params;
   const jwt = useSelector((state) => state.customer.jwt);
   const [code, setCode] = useState("");
+  const dispatch = useDispatch();
 
   const handleSubmitKey = async () => {
     await authorise({
@@ -22,19 +24,19 @@ export default Authorise = (props) => {
       .then((resp) => {
         if (resp.status === 200) {
           const { data } = resp;
-          if (data.jwt) {
-            dispatch(updateJwt(data.jwt));
+          if (data) {
+            dispatch(updateJwt(data));
           }
         } else alert("An error has occured, please try again");
       })
       .catch((err) => {
-        alert("An error has occured, please try again");
+        console.log(err);
+        alert("An unexpected has occured, please try again");
       });
   };
 
   useEffect(() => {
-    console.log(jwt);
-    navigation.navigate("Home");
+    if (jwt) navigation.navigate("Home");
   }, [jwt]);
 
   const toLogin = () => {

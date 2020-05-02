@@ -113,31 +113,39 @@ makeReservation = async (customerId, events) => {
             // logger.info(resp.data);
 
             const customer = await Customer.findById(customerId);
-            const message = {
-              to: customer.pushNotificationToken,
-              sound: "default",
-              // title: "Upcoming reservation",
-              body: `Your reservation at ${carparkName}, Lot ${parkingLot.parkingLotNumber} is coming up in 10 minutes!`,
-              // data: { data: "goes here" },
-              _displayInForeground: true,
-            };
+            if (customer.pushNotificationToken) {
+              const message = {
+                to: customer.pushNotificationToken,
+                sound: "default",
+                // title: "Upcoming reservation",
+                body: `Your reservation at ${carparkName}, Lot ${parkingLot.parkingLotNumber} is coming up in 10 minutes!`,
+                // data: { data: "goes here" },
+                _displayInForeground: true,
+              };
 
-            await axios
-              .post("https://exp.host/--/api/v2/push/send", message, {
-                headers: {
-                  Accept: "application/json",
-                  "Accept-encoding": "gzip, deflate",
-                  "Content-Type": "application/json",
-                },
-              })
-              .then((response) => {
-                console.log("Push notification sent!");
-                return response;
-              })
-              .catch((err) => console.log("Error", err.response.data.errors));
+              await axios
+                .post("https://exp.host/--/api/v2/push/send", message, {
+                  headers: {
+                    Accept: "application/json",
+                    "Accept-encoding": "gzip, deflate",
+                    "Content-Type": "application/json",
+                  },
+                })
+                .then((response) => {
+                  console.log("Push notification sent!");
+                  return response;
+                })
+                .catch((err) => console.log("Error", err.response.data.errors));
+            }
 
             setTimeout(() => {
               console.log("timeouted");
+
+              if (carparkName === "Car Park 11")
+                pi_url = `http://${pi2}:5001/api/reservation-expired/${carparkName}/${parkingLot.pin}/True`;
+              else if (carparkName === "Car Park 15")
+                pi_url = `http://${pi1}:5001/api/reservation-expired/${carparkName}/${parkingLot.pin}/True`;
+
               axios.get(pi_url).then(async () => {
                 console.log("cone lowered after timeout");
                 const parkingLot = await ParkingLot.findOne({
@@ -166,7 +174,7 @@ makeReservation = async (customerId, events) => {
                   await parkingLot.save();
                 }
               });
-            }, 30000);
+            }, 15000);
             resolve("Done");
             // TODO: break out of the loop once reservation is made
           })

@@ -13,7 +13,7 @@ module.exports = async () => {
     const customers = await retrieveAllCustomer();
     const customer_events = await checkUpcomingEvents(customers);
     await makeReservationForAllUpcomingEvents(customer_events);
-  }, 60000);
+  }, 30000);
 
   /*
   1. Retrieve token of all customers

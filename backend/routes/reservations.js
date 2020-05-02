@@ -92,13 +92,17 @@ router.post("/attend", async (req, res) => {
         parkingLotNumber: reservation.parkingLotNumber,
       });
 
+      const carparkName = reservation.carpark.carparkName;
+      console.log(carparkName);
       if (reservation)
         if (carparkName === "Car Park 11")
           await axios.get(
-            `http://${pi2}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`
+            `http://${pi2}:5001/api/reservation/${carparkName}/${parkingLot.pin}/True`
           );
         else if (carparkName === "Car Park 15")
-          `http://${pi1}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`;
+          await axios.get(
+            `http://${pi1}:5001/api/reservation/${carparkName}/${parkingLot.pin}/True`
+          );
 
       parkingLot.status = "OCCUPIED";
       reservation.status = "COMPLETED";
@@ -144,11 +148,12 @@ router.post("/cancel/:reservationId", async (req, res) => {
   const carparkName = reservation.carpark.carparkName;
   if (carparkName === "Car Park 11")
     await axios.get(
-      `http://${pi2}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`
+      `http://${pi2}:5001/api/reservation/${carparkName}/${parkingLot.pin}/True`
     );
   else if (carparkName === "Car Park 15")
-    `http://${pi1}:5001/api/reservation/${reservation.carpark.carparkName}/${parkingLot.pin}/True`;
-
+    await axios.get(
+      `http://${pi1}:5001/api/reservation/${carparkName}/${parkingLot.pin}/True`
+    );
   await carpark.save();
   await parkingLot.save();
   await reservation.save();

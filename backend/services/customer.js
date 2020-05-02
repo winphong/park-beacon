@@ -1,5 +1,4 @@
 const _ = require("lodash");
-const bcrypt = require("bcryptjs");
 const Cryptr = require("cryptr");
 const cryptr = new Cryptr(process.env.SECRET_KEY);
 const { Customer } = require("../model/customer");
@@ -7,15 +6,19 @@ const { Customer } = require("../model/customer");
 // Getting customer [test purpose]
 getAllCustomer = async () => {
   let customers = await Customer.find();
-  customers = customers.map(customer => {
-    customer._doc.token = JSON.parse(cryptr.decrypt(customer.token));
-    return customer;
+  customers = customers.map((customer) => {
+    try {
+      customer._doc.token = JSON.parse(cryptr.decrypt(customer.token));
+      return customer;
+    } catch (err) {
+      // console.log(err);
+    }
   });
-  return customers;
+  return customers.filter((customer) => customer);
 };
 
 module.exports = {
-  getAllCustomer
+  getAllCustomer,
 };
 
 // The word “async” before a function means one simple thing: a function always returns a promise
