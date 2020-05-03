@@ -3,6 +3,8 @@ import time
 import socket
 import json
 
+GPIO.setmode(GPIO.BOARD)
+
 
 def lowerCone(servo):
     for i in range(5):

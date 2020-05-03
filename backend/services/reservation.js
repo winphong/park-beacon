@@ -138,8 +138,19 @@ makeReservation = async (customerId, events) => {
                 .catch((err) => console.log("Error", err.response.data.errors));
             }
 
-            setTimeout(() => {
+            setTimeout(async () => {
               console.log("timeouted");
+
+              const reservation = await Reservation.findOne({
+                calendarEventId: event.id,
+              });
+
+              if (
+                reservation.status === "COMPLETED" ||
+                reservation.status === "CANCELLED"
+              )
+                return;
+              // if parking lot is not occupied after timeout, reservation should still be RESERVED as well
               let timeout_pi_url;
 
               if (carparkName === "Car Park 11")
@@ -162,9 +173,6 @@ makeReservation = async (customerId, events) => {
                   });
                   carpark.numOfSlotAvailable = carpark.numOfSlotAvailable + 1;
 
-                  const reservation = await Reservation.findOne({
-                    calendarEventId: event.id,
-                  });
                   // if parking lot is not occupied after timeout, reservation should still be RESERVED as well
                   if (reservation.status === "RESERVED") {
                     reservation.status = "EXPIRED";
@@ -175,7 +183,7 @@ makeReservation = async (customerId, events) => {
                   await parkingLot.save();
                 }
               });
-            }, 10 * 60000);
+            }, 5 * 60000);
             resolve("Done");
             // TODO: break out of the loop once reservation is made
           })

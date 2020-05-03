@@ -20,7 +20,7 @@ def move_cone(carparkName, pin, lower):
     s = socket.socket()
     s.connect((host, port))
 
-    if lower:
+    if lower == True:
         s.send(json.dumps(
             {"carparkName": carparkName,
              "pin": pin,

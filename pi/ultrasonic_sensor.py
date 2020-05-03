@@ -68,7 +68,6 @@ try:
         # for ultrasonic_sensor pin only since there's only 1 ultrasonic sensor
         if (dist > 20 and occupied_count >= 3):
             vacant_count = vacant_count + 1
-            occupied_count = 0
 
         # vacant_count = 3 to ensure the sensor value is accurate before confirming
         # that the slot is indeed empty
