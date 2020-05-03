@@ -140,13 +140,14 @@ makeReservation = async (customerId, events) => {
 
             setTimeout(() => {
               console.log("timeouted");
+              let timeout_pi_url;
 
               if (carparkName === "Car Park 11")
-                pi_url = `http://${pi2}:5001/api/reservation-expired/${carparkName}/${parkingLot.pin}/True`;
+                timeout_pi_url = `http://${pi2}:5001/api/reservation-expired/${carparkName}/${parkingLot.pin}/True`;
               else if (carparkName === "Car Park 15")
-                pi_url = `http://${pi1}:5001/api/reservation-expired/${carparkName}/${parkingLot.pin}/True`;
+                timeout_pi_url = `http://${pi1}:5001/api/reservation-expired/${carparkName}/${parkingLot.pin}/True`;
 
-              axios.get(pi_url).then(async () => {
+              axios.get(timeout_pi_url).then(async () => {
                 console.log("cone lowered after timeout");
                 const parkingLot = await ParkingLot.findOne({
                   parkingLotNumber: response.parkingLotNumber,
@@ -174,7 +175,7 @@ makeReservation = async (customerId, events) => {
                   await parkingLot.save();
                 }
               });
-            }, 15000);
+            }, 10 * 60000);
             resolve("Done");
             // TODO: break out of the loop once reservation is made
           })

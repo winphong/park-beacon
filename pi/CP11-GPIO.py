@@ -8,7 +8,7 @@ GPIO.setmode(GPIO.BOARD)
 
 def lowerCone(servo):
     print("lowering")
-    servo.ChangeDutyCycle(2)  # turn towards 0 degree
+    servo.ChangeDutyCycle(7)  # turn towards 0 degree
     time.sleep(0.5)  # sleep 0.05 second to prevent jerking
     servo.ChangeDutyCycle(0)
     servo.stop()
@@ -16,7 +16,7 @@ def lowerCone(servo):
 
 def raiseCone(servo):
     print("raising")
-    servo.ChangeDutyCycle(7)  # turn towards 0 degree
+    servo.ChangeDutyCycle(2)  # turn towards 0 degree
     time.sleep(0.5)  # sleep 0.05 second
     servo.ChangeDutyCycle(0)
     servo.stop()

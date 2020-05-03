@@ -2,7 +2,6 @@ import RPi.GPIO as GPIO
 import time
 import socket
 import json
-import requests
 
 GPIO.setmode(GPIO.BOARD)
 GPIO_TRIGGER = 16
@@ -18,7 +17,7 @@ time.sleep(2)
 
 def lowerCone(servo):
     print("lowering")
-    servo.ChangeDutyCycle(2)  # turn towards 0 degree
+    servo.ChangeDutyCycle(7)  # turn towards 0 degree
     time.sleep(0.5)  # sleep 0.05 second to prevent jerking
     servo.ChangeDutyCycle(0)
     servo.stop()
@@ -26,38 +25,10 @@ def lowerCone(servo):
 
 def raiseCone(servo):
     print("raising")
-    servo.ChangeDutyCycle(7)  # turn towards 0 degree
+    servo.ChangeDutyCycle(2)  # turn towards 0 degree
     time.sleep(0.5)  # sleep 0.05 second
     servo.ChangeDutyCycle(0)
     servo.stop()
-
-
-def distance():
-    # set Trigger to HIGH
-    GPIO.output(GPIO_TRIGGER, True)
-
-    # set Trigger after 0.01ms to LOW
-    time.sleep(0.00001)
-    GPIO.output(GPIO_TRIGGER, False)
-
-    StartTime = time.time()
-    StopTime = time.time()
-
-    # save StartTime
-    while GPIO.input(GPIO_ECHO) == 0:
-        StartTime = time.time()
-
-    # save time of arrival
-    while GPIO.input(GPIO_ECHO) == 1:
-        StopTime = time.time()
-
-    # time difference between start and arrival
-    TimeElapsed = StopTime - StartTime
-    # multiply with the sonic speed (34300 cm/s)
-    # and divide by 2, because there and back
-    distance = (TimeElapsed * 34300) / 2
-
-    return distance
 
 
 def server():
@@ -73,13 +44,6 @@ def server():
     s.settimeout(1)
 
     pins = []
-    vacant = True
-    count = 0
-    ultrasonic_sensor_pin = 32
-
-    vacate_url = "http://{}:5000/api/reservation/vacate".format(
-        "192.168.43.245")
-    headers = {'content-type': 'application/json'}
 
     try:
         while True:
@@ -87,31 +51,6 @@ def server():
             # TODO: Motion sensor to trigger capturing of carplate
             # TODO: Take photo
             # TODO: Analyse photo to lower the cone
-            dist = distance()
-            print("Measured Distance = %.1f cm" % dist)
-            time.sleep(1)
-
-            # parking lot occupied by car
-            if (dist <= 20):
-                vacant = False
-
-            # parking lot is occupied but sensor value shows vacant => car left
-            # for ultrasonic_sensor pin only since there's only 1 ultrasonic sensor
-            if (dist > 20 and vacant == False):
-                count = count + 1
-
-            # count = 3 to ensure the sensor value is accurate before confirming
-            # that the slot is indeed empty
-            if (count >= 3):
-                # Send request to node to vacate
-                requests.post(vacate_url,
-                              headers=headers, json={
-                                  'carparkName': carparkName,
-                                  'pin': ultrasonic_sensor_pin,
-                              })
-                vacant = True
-                count = 0
-
             try:
                 client_socket, address = s.accept()
 

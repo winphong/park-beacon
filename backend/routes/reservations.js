@@ -195,7 +195,7 @@ router.post("/vacate", async (req, res) => {
 
   await carpark.save();
   await parkingLot.save();
-
+  console.log("vacating");
   res.send("Parking lot is now vacated");
 });
 
