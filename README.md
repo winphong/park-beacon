@@ -10,7 +10,13 @@ ParkBeacon is an application to automated reservation of parking slot in Nationa
 
 ### Hardware
 
+![Overall setup](https://res.cloudinary.com/rt04capstone/image/upload/v1588527502/20200503_235821_hyud0s.jpg)
+_Overall setup up for Raspberry Pi 1_
+
 #### Rasberry Pi 1
+
+![Ultrasonic sensor setup](https://res.cloudinary.com/rt04capstone/image/upload/a_-90/v1588527510/20200504_000522_qg5pkp.jpg)
+_Overall setup up for ultrasonic sensor_
 
 1. Setup the ultrasonic sensor as shown in the diagram above.
 2. Connect power to 5.0V, ground to GND and pulse to pin 33 for servo 1.
