@@ -3,31 +3,22 @@ import time
 import socket
 import json
 
-GPIO.setmode(GPIO.BOARD)
-GPIO_TRIGGER = 16
-GPIO_ECHO = 18
-
-GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
-GPIO.setup(GPIO_ECHO, GPIO.IN)
-
-GPIO.output(GPIO_TRIGGER, False)
-print("Waiting For Sensor To Settle")
-time.sleep(2)
-
 
 def lowerCone(servo):
-    print("lowering")
-    servo.ChangeDutyCycle(7)  # turn towards 0 degree
-    time.sleep(0.5)  # sleep 0.05 second to prevent jerking
-    servo.ChangeDutyCycle(0)
+    for i in range(5):
+        print("lowering")
+        servo.ChangeDutyCycle(7)  # turn towards 0 degree
+        time.sleep(0.5)  # sleep 0.05 second to prevent jerking
+        servo.ChangeDutyCycle(0)
     servo.stop()
 
 
 def raiseCone(servo):
-    print("raising")
-    servo.ChangeDutyCycle(2)  # turn towards 0 degree
-    time.sleep(0.5)  # sleep 0.05 second
-    servo.ChangeDutyCycle(0)
+    for i in range(5):
+        print("raising")
+        servo.ChangeDutyCycle(2)  # turn towards 0 degree
+        time.sleep(0.5)  # sleep 0.05 second
+        servo.ChangeDutyCycle(0)
     servo.stop()
 
 

@@ -59,7 +59,6 @@ def scan():
             for plate in results['results']:
                 for candidate in plate['candidates']:
                     carplateNum = candidate['plate']
-                    print(carplateNum)
                     # TODO: Filter irrelevant carplate result before sending to note
                     carplateList.append(carplateNum)
 

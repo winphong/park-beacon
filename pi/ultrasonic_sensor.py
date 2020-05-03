@@ -46,8 +46,8 @@ def distance():
 
 try:
     carparkName = "Car Park 15"
-    vacant = True
-    count = 0
+    vacant_count = 0
+    occupied_count = 0
     ultrasonic_sensor_pin = 32
 
     vacate_url = "http://{}:5000/api/reservation/vacate".format(
@@ -61,25 +61,27 @@ try:
 
         # parking lot occupied by car
         if (dist <= 20):
-            vacant = False
+            occupied_count = occupied_count + 1
+            vacant_count = 0
 
         # parking lot is occupied but sensor value shows vacant => car left
         # for ultrasonic_sensor pin only since there's only 1 ultrasonic sensor
-        if (dist > 20):
-            vacant = True
-            count = count + 1
+        if (dist > 20 and occupied_count >= 3):
+            vacant_count = vacant_count + 1
+            occupied_count = 0
 
-        # count = 3 to ensure the sensor value is accurate before confirming
+        # vacant_count = 3 to ensure the sensor value is accurate before confirming
         # that the slot is indeed empty
-        if (count >= 3 and vacant == True):
+        if (vacant_count >= 3):
             # Send request to node to vacate
+            print("vacating")
             response = requests.post(vacate_url,
                                      headers=headers, json={
                                          'carparkName': carparkName,
                                          'pin': ultrasonic_sensor_pin,
                                      })
-            print(response)
-            count = 0
+            vacant_count = 0
+            occupied_count = 0
 
 except KeyboardInterrupt:
     pass
